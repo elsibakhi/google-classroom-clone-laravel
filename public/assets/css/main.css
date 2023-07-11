@@ -1,0 +1,33 @@
+.nav-tabs .nav-link{
+    color: rgb(150, 150, 150);
+    height: 60px;
+    font-weight: 500;
+    
+}
+.nav-tabs .nav-link:hover{
+    color: rgb(0, 0, 0);
+}
+.nav-tabs .nav-link.active{
+   color: rgb(25,103,210);
+   border-bottom: 3px solid rgb(25,103,210);
+}
+
+
+.my-dropdown-toggle::after {
+    content: none;
+}
+
+
+.accordion_topics{
+    border:0;
+    background-color: white;
+    color: rgb(102, 102, 102);
+    font-weight: 700;
+    font-size: 18px;
+}
+.accordion_topics.collapsed{
+
+    color: rgb(53, 53, 53);
+    font-weight: 300;
+  
+}
