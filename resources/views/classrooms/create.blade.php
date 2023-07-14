@@ -1,7 +1,10 @@
-@include('partials.header')
+@extends('layouts.master')
 
+
+
+@section('content')
 <div class="container my-5">
-    <form class="w-50" action={{route("classrooms.store")}} method="POST">
+    <form class="w-50" action={{route("classrooms.store")}} method="POST" enctype="multipart/form-data" >
       
       {{-- // three ways to csrf token --}}
         {{-- 1- <input type="hidden" name="_token" value={{csrf_token()}}>
@@ -38,7 +41,12 @@
       </form>
 
 </div>
+  
+
+@endsection
 
 
 
-@include('partials.footer')
+
+
+

@@ -1,5 +1,10 @@
-@include('partials.header')
+@extends('layouts.master')
 
+
+
+@section('content')
+
+  
 <div class="container my-5">
     <form class="w-50" action={{route("topics.update",$topic->id)}} method="POST">
       @method("PUT") 
@@ -26,4 +31,13 @@
 
 
 
-@include('partials.footer')
+
+@endsection
+
+
+
+
+
+
+
+

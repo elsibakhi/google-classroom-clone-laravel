@@ -2,59 +2,83 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
-
 use App\Models\Topic;
-
 class TopicController extends Controller
 {
-    //
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
 
+        $topics=Topic::all();
 
-    public function store(Request $request,$id) : RedirectResponse  {
-   
+        return view("topics.index",["topics"=>$topics]);
+    }
 
-$request->merge(["classroom_id"=>$id]);
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+ 
     
     Topic::create($request->all()); 
 
     
-    return  redirect()->back();
-    
-    
-    
-    
-    
-    
+    return  redirect()->route("classrooms.index")->with("success","The opreation done");
+
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
 
-public function show (){
-    $topics=Topic::all();
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Topic $topic)
+    {
+        //
+        return view("topics.edit",["topic"=>$topic]);
+    }
 
-    return view("topics.show",["topics"=>$topics]);
-}
-public function edit ($id){
-  
-$topic=Topic::find($id);
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Topic $topic)
+    {
+        //
+        $topic->update($request->all());
 
-    return view("topics.edit",["topic"=>$topic]);
-}
-public function update (Request $request,$id): RedirectResponse {
-  
-$topic=Topic::find($id);
-$topic->update($request->all());
+        return  redirect()->route("classrooms.index")->with("success","The opreation done");
 
-   return redirect()->back();
-}
-public function destroy ($id) : RedirectResponse {
-  
-Topic::destroy($id);
+    }
 
-return  redirect()->back();
-}
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+        Topic::destroy($id);
 
+        return  redirect()->route("classrooms.index")->with("success","The opreation done");
 
+    }
 }

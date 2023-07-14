@@ -11,7 +11,7 @@ class Classroom extends Model
     use HasFactory;
 
     protected $fillable =[
-        "name","code","section","subject","room","theme","cover_image_path"
+        "name","code","section","subject","room","theme","cover_img_path"
     ]; // whightlist
 
 
@@ -21,5 +21,13 @@ class Classroom extends Model
  {
      return $this->hasMany(Topic::class);
  }
+
+
+
+ // if i need if i send parameter in resouce route , i need laravel to find record by another column instead of id like 'code' 
+// public function getRouteKeyName(){
+//     return 'code';
+// }
+
 
 }

@@ -1,4 +1,11 @@
-@include('partials.header')
+@extends('layouts.master')
+
+@push('styles')
+    <link rel="stylesheet" href="\assets\css\classroom\show.css">
+@endpush
+
+@section('content')
+
 @php
     $updated_topic="";
 @endphp
@@ -8,7 +15,7 @@
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form action={{route("topics.store",$classroom->id)}} method="post">
+        <form action={{route("topics.store")}} method="post">
             @csrf
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel">Add topic</h1>
@@ -19,7 +26,7 @@
                     <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Mangement">
                     <label for="floatingInput">Topic</label>
                   </div>
-                  
+                  <input type="hidden" name="classroom_id" value={{$classroom->id}} >
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -61,7 +68,14 @@
         <div class="tab-content " id="myTabContent">
             <div class="tab-pane fade show active " id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
           <div class="row">
-            
+            <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img id="cover_img" src={{Storage::disk("public")->url($classroom->cover_img_path)}} class="d-block" alt="..." >
+                </div>
+      
+              </div>
+            </div>
             
            
         <div class="col-4">
@@ -93,6 +107,10 @@
 
 
     <div class="col-8">
+
+
+
+
       Stream content
     </div>
             
@@ -212,7 +230,9 @@
 </div>
 
 
+  
+
+@endsection
 
 
 
-@include('partials.footer')

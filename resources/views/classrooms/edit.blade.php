@@ -1,7 +1,11 @@
-@include('partials.header')
+@extends('layouts.master')
+
+
+
+@section('content')
 
 <div class="container my-5">
-    <form class="w-50" action={{route("classrooms.update",$classroom->id)}} method="POST">
+    <form class="w-50" action={{route("classrooms.update",$classroom->id)}} method="POST" enctype="multipart/form-data"  >
       @method("PUT") 
    @csrf
 
@@ -10,7 +14,7 @@
    {{ -2-  method_field("put")}} --}}
    {{-- -3- --}}
   
-        <h1>Create classroom</h1>
+        <h1>Edit classroom</h1>
         <hr>
         <div class="my-3">
           <label for="name" class="form-label">Name</label>
@@ -44,4 +48,7 @@
 
 
 
-@include('partials.footer')
+  
+
+@endsection
+
