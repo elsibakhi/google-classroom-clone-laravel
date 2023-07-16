@@ -19,11 +19,14 @@
         <hr>
         <div class="my-3">
           <label for="name" class="form-label">Name</label>
-          <input type="text" class="form-control" id="name" name="name" value="{{$topic->name}}" aria-describedby="emailHelp">
-         
+          <input type="text" @class(["form-control","is-invalid" => $errors->has("name")]) id="name" name="name" value="{{old("name",$topic->name)}}" aria-describedby="emailHelp">
+         @error('name')
+         <div class="invalid-feedback">{{$message}}</div>
+             
+         @enderror
         </div>
       
-       
+
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 

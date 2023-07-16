@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Requests\TopicRequest;
 use Illuminate\Http\Request;
 use App\Models\Topic;
 class TopicController extends Controller
@@ -29,12 +31,12 @@ class TopicController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TopicRequest $request)
     {
         //
  
-    
-    Topic::create($request->all()); 
+    $validated=$request->validated();
+    Topic::create($validated); 
 
     
     return  redirect()->route("classrooms.index")->with("success","The opreation done");
@@ -55,16 +57,22 @@ class TopicController extends Controller
     public function edit(Topic $topic)
     {
         //
+        
         return view("topics.edit",["topic"=>$topic]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Topic $topic)
+    public function update(TopicRequest $request, Topic $topic)
     {
         //
-        $topic->update($request->all());
+
+        $validated=$request->validated();
+
+        $topic->update($validated);
+
+
 
         return  redirect()->route("classrooms.index")->with("success","The opreation done");
 

@@ -12,7 +12,7 @@
 
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div   class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <form action={{route("topics.store")}} method="post">
@@ -23,8 +23,13 @@
             </div>
             <div class="modal-body">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Mangement">
+                    <input type="text"  @class(['form-control', 'is-invalid' => $errors->has("name")]) id="floatingInput" name="name" placeholder="Mangement" value={{old("name")}} >
                     <label for="floatingInput">Topic</label>
+                      @error('name')
+                          
+                      <div class="invalid-feedback">{{$message}}</div>
+                      @enderror
+                  
                   </div>
                   <input type="hidden" name="classroom_id" value={{$classroom->id}} >
             </div>
@@ -46,10 +51,10 @@
     <div class="">
         <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
             <li class=" nav-item" role="presentation">
-              <button class=" nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Stream</button>
+              <button @class(['nav-link', 'active' => !$errors->has("name")]) clas id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Stream</button>
             </li>
             <li class="nav-item" role="presentation">
-              <button class=" nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Classwork</button>
+              <button @class(['nav-link', 'active' => $errors->has("name")])  id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Classwork</button>
             </li>
             <li class="nav-item" role="presentation">
               <button class=" nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">people</button>
@@ -66,7 +71,7 @@
     <div class="row py-5">
 
         <div class="tab-content " id="myTabContent">
-            <div class="tab-pane fade show active " id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            <div @class(['tab-pane fade', 'show active' => !$errors->has("name")]) id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
           <div class="row">
             <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
               <div class="carousel-inner">
@@ -116,7 +121,7 @@
             
 </div>       
             </div>
-            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div  @class(['tab-pane fade', 'show active' => $errors->has("name")]) id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
 
 
                 <div class="row">
@@ -230,7 +235,21 @@
 </div>
 
 
-  
+
+@error('name')
+@push('scripts')
+
+
+<script>
+  var myModal = new bootstrap.Modal(document.getElementById('exampleModal'));
+  myModal.show();
+
+</script>
+
+
+@endpush
+@enderror
+
 
 @endsection
 

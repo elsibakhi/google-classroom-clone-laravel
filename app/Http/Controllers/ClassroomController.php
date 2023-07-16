@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Classroom;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use App\Http\Requests\ClassroomRequest;
+
 class ClassroomController extends Controller
 {
     // Actions 
@@ -27,10 +30,46 @@ return view("classrooms.index",compact("classrooms"));
 
     public function create(){
 
-        return view("classrooms.create");
-    }
-    public function store(Request $request) : RedirectResponse  {
-   
+        return view("classrooms.create",["classroom"=>new Classroom()]); // i use ["classroom"=>new Classroom()] because i use classroom variable in << classroom_form.blade.php >>
+    }  // i send empty classroom object
+    public function store(ClassroomRequest $request) : RedirectResponse  {
+  
+        
+// <<<<<<<<<<<<<<<< i replace  $request->validate($rules,$messages);  with ClassroomRequest   >>>>>>>>>>>>>>>
+//  $rules=  [ // return array with validated inputs 
+//     "name"=> "required|string|max:255",
+//     "section"=> ["nullable","string","max:255" , function ($attribute,$value,$fail){  // if i need to create custom validation by clsuer function
+    // if($value=="admin"){
+    //     return $fail("this name is not allowed")
+    // }
+//}],
+//     "subject"=> "nullable|string|max:255",
+//     "room"=> ["nullable","string","max:255"], // another way
+//     "cover_image"=> ["nullable","image",
+//    Rule::dimensions([
+//     'min_width'=>200,
+//     'min_height'=>200,
+//     'max_width'=>1000,
+//     'max_height'=>1000
+//    ]),
+//     // "dimentions:min_width=200,min_height=200,max_width=1000,max_height=1000"  // another way
+// ],
+
+
+// ];     
+
+
+// if i need to customize error messages
+// $messages =[
+// 'required' => ':attribute is importent', //  :attribute return the name of input
+// 'name.required'=>"the name is required", // if i need a specific input like name
+// 'cover_image.max'=>"Image size is greater than ... ",
+
+// ];
+
+$validated=$request->validated(); // it return validated inputs from ClassroomRequest
+
+
     //    $request->input("name"); // for both
 
   // $request->post("name");  // get data from body jsut
@@ -48,12 +87,14 @@ if ($request->hasFile("cover_image")) {
     $file=$request->file("cover_image");  // file to get file (retuen upLoadedFile object)
  // now $file have myltiple methods and properties to get info about the file
  
-    $path=$file->store("/","public"); // there is public desk and local desk and s3(remote , amazon desk) desk to store files// default desk is local  (public and local is local desks)
- // we can use storeAs() to determine the name of file
+ $path=Classroom::uploadCoverImage($file); // uploadCoverImage() this is method i declare it in Classroom model class
 
- $request->merge([
-  'cover_img_path' => $path,
- ]);
+ //alter way // $path=$file->store("/",["disk"=>"public"]);
+
+//  $request->merge([
+//   'cover_img_path' => $path,
+//  ]);
+ $validated["cover_img_path"]=$path;
 
 }
 
@@ -75,10 +116,10 @@ $classroom = new Classroom();
 
 
 // alter way to add code
-$request->merge(["code"=>Str::random(8)]);
-
+// $request->merge(["code"=>Str::random(8)]);
+$validated["code"]=Str::random(8);
 // --way2-- this way  depend on fillable property  -- mass assignment
-$classroom::create($request->all()); // if we use form fields names similer to fields names in the table
+$classroom::create($validated); // if we use form fields names similer to fields names in the table
 
 // --way3--  this way  depend on fillable property  -- mass assignment
 // $classroom = new Classroom($request->all());
@@ -128,7 +169,19 @@ $classroom=Classroom::find($id);
     public function update(Request $request ,Classroom $classroom){ 
 
 
+$request->validate([
+    'name' => ['required','string','max:255'],
+    'section'=>['nullable','string','max:255'],
+    'subject'=>['nullable','string','max:255'],
+    'room'=>['nullable','string','max:255'],
+    'cover_image'=>['nullable','image',Rule::dimensions([
+        "min_width"=>200,
+        "min_height"=>200,
+        "max_width"=>1000,
+        "max_height"=>1000,
+    ])],
 
+]);
    
 
    
@@ -150,15 +203,21 @@ $classroom=Classroom::find($id);
     $file=$request->file("cover_image");  
 
  
-    $path=$file->store("/","public"); 
+    $path=Classroom::uploadCoverImage($file);  
+
+
+// solution 1 to replace img 
+//$name = $classroom->cover_img_path ?? (Str::random(40).".".$file->getClientOriginalExtension());
+//   $path=$file->storeAs("/",$name,"public"); 
+
 
  $request->merge([
   'cover_img_path' => $path,
  ]);
 
  if($classroom->cover_img_path){ // to ensure that img is exist
-  
-     Storage::disk('public')->delete($classroom->cover_img_path);
+  // solution 2 to replace img 
+  Classroom::deleteCoverImage($classroom->cover_img_path);
     
 }
 
@@ -181,12 +240,14 @@ $classroom=Classroom::find($id);
         }
 
 
-        public function destroy($id){
-if(Classroom::find($id)->cover_img_path != null){
-    Storage::disk('public')->delete(Classroom::find($id)->cover_img_path);
+        public function destroy(Classroom $classroom){
+// delete classroom first to ensure there in no problems
+            $classroom->delete();
+
+            if($classroom->cover_img_path != null){
+  Classroom::deleteCoverImage($classroom->cover_img_path);
     
 }
-Classroom::destroy($id);
 
 
 //2- Classroom::where("id","=",$id)->delete();
