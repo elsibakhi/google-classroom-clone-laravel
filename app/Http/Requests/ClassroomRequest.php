@@ -31,8 +31,8 @@ class ClassroomRequest extends FormRequest
            Rule::dimensions([
             'min_width'=>200,
             'min_height'=>200,
-            'max_width'=>1000,
-            'max_height'=>1000
+            'max_width'=>1300,
+            'max_height'=>1300
            ]),
             // "dimentions:min_width=200,min_height=200,max_width=1000,max_height=1000"  // another way
         ],

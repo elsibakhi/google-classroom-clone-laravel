@@ -36,10 +36,11 @@ class TopicController extends Controller
         //
  
     $validated=$request->validated();
+
     Topic::create($validated); 
 
     
-    return  redirect()->route("classrooms.index")->with("success","The opreation done");
+    return  redirect()->back()->with("success","The opreation done");
 
     }
 
@@ -74,7 +75,7 @@ class TopicController extends Controller
 
 
 
-        return  redirect()->route("classrooms.index")->with("success","The opreation done");
+        return  redirect()->back()->with("success","The opreation done");
 
     }
 
@@ -86,7 +87,7 @@ class TopicController extends Controller
         //
         Topic::destroy($id);
 
-        return  redirect()->route("classrooms.index")->with("success","The opreation done");
+        return  redirect()->back()->with("success","The opreation done");
 
     }
 }

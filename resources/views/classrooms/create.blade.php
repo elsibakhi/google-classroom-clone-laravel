@@ -1,8 +1,7 @@
-@extends('layouts.master')
+<x-main-layout title="Create Classroom"> 
 
 
 
-@section('content')
 <div class="container my-5">
 
 {{-- way to show errors --}}
@@ -28,17 +27,15 @@
         <h1>Create classroom</h1>
         <hr>
        
-@include('partials.classroom_form',[
-  "button_label"=>"Create Classroom"
-])
+
+<x-classroom.form button-label="Create Classroom"  />
 
       </form>
 
 </div>
   
 
-@endsection
-
+</x-main-layout>
 
 
 

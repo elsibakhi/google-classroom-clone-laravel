@@ -1,8 +1,8 @@
-@extends('layouts.master')
+<x-main-layout title="Edit Topic"> 
 
 
 
-@section('content')
+
 
   
 <div class="container my-5">
@@ -14,7 +14,8 @@
    {{--   -1- <input type="hidden" name="_method" vlaue="put">
    {{ -2-  method_field("put")}} --}}
    {{-- -3- --}}
-  
+  <x-alert name="success" id="alert-suc" class="alert-success" />
+
         <h1>Update topic</h1>
         <hr>
         <div class="my-3">
@@ -35,8 +36,7 @@
 
 
 
-@endsection
-
+</x-main-layout>
 
 
 

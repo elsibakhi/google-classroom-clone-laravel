@@ -1,8 +1,8 @@
-@extends('layouts.master')
+<x-main-layout title="Topics"> 
 
 
 
-@section('content')
+
 
 <div class="container py-5">
     <h1>All topics</h1>
@@ -41,5 +41,5 @@
 
   
 
-@endsection
+</x-main-layout>
 

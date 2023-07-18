@@ -1,8 +1,7 @@
-@extends('layouts.master')
+<x-main-layout title="Edit Classroom"> 
 
 
 
-@section('content')
 
 <div class="container my-5">
     <form class="w-50" action={{route("classrooms.update",$classroom->id)}} method="POST" enctype="multipart/form-data"  >
@@ -19,10 +18,8 @@
 
 
       
-        @include('partials.classroom_form',[
-          "button_label"=>"Update Classroom"
-        ])
 
+<x-classroom.form button-label="Update Classroom" :classroom="$classroom" />
 
       </form>
 
@@ -31,6 +28,5 @@
 
 
   
-
-@endsection
+</x-main-layout>
 

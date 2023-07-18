@@ -96,6 +96,9 @@ if ($request->hasFile("cover_image")) {
 //  ]);
  $validated["cover_img_path"]=$path;
 
+}else{
+    $cover_namber=rand(1,5);
+    $validated["cover_img_path"]="/covers/$cover_namber.jpg";
 }
 
 

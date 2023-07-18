@@ -16,7 +16,7 @@
   
     <!-- Copyright -->
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-      © 2023 Copyright: {{env("APP_NAME")}}
+      © 2023 Copyright: {{config("app.name")}}
     </div>
     <!-- Copyright -->
   </footer>
@@ -24,7 +24,7 @@
   <script src="https://kit.fontawesome.com/442c7b7464.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-@stack("scripts")
+{{$slot}}
 
 
 </body>
