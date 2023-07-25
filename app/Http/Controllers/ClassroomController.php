@@ -9,11 +9,15 @@ use App\Models\Classroom;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\ClassroomRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ClassroomController extends Controller
 {
     // Actions 
-
+public function __construct()
+{
+   $this->middleware("auth") ;
+}
 
     public function index(){
 //   echo $request->url();
@@ -22,10 +26,21 @@ class ClassroomController extends Controller
 // $classrooms= Classroom::all(); //return  collection of classrooms
 // <<collection>> is class in php we can act with it the same as array
         
-$classrooms= Classroom::orderBy("name","DESC")->get(); // now we cant use all but we can use -> first
-
+$classrooms= Classroom::orderBy("name","DESC")->active()->get(); // now we cant use all but we can use -> first
+// active is a scope method i declare it in classroom model
 return view("classrooms.index",compact("classrooms"));
     }
+
+
+    // if i need to stop global scope in some queries
+//     public function index(){
+     
+// // $classrooms= Classroom::orderBy("name","DESC")->active()->withoutGlobalScopes()->get(); // withoutGlobalScopes()--> stop all Global Scopes
+// // $classrooms= Classroom::orderBy("name","DESC")->active()->withoutGlobalScope("user")->get(); // withoutGlobalScope("user") --> stop user Global Scope
+// // $classrooms= Classroom::orderBy("name","DESC")->active()->withoutGlobalScope("user")->get(); // withoutGlobalScope(UserClassroomScope::class) --> stop UserClassroomScope
+
+// return view("classrooms.index",compact("classrooms"));
+//     }
 
 
     public function create(){
@@ -69,6 +84,7 @@ return view("classrooms.index",compact("classrooms"));
 
 $validated=$request->validated(); // it return validated inputs from ClassroomRequest
 
+$validated["user_id"]=Auth::id();
 
     //    $request->input("name"); // for both
 
@@ -247,10 +263,10 @@ $request->validate([
 // delete classroom first to ensure there in no problems
             $classroom->delete();
 
-            if($classroom->cover_img_path != null){
-  Classroom::deleteCoverImage($classroom->cover_img_path);
+//             if($classroom->cover_img_path != null){
+//   Classroom::deleteCoverImage($classroom->cover_img_path);
     
-}
+// }  soft delete will not delete record -> just declare it as deleted
 
 
 //2- Classroom::where("id","=",$id)->delete();
@@ -275,6 +291,47 @@ return  redirect()->route("classrooms.index")->with("success","The opreation don
 // Session::reflash()  تحتقظ بكل الفلاش مسجس لريكوست اضافي
 
 }
+
+
+
+public function trashed(){
+    $classrooms=Classroom::onlyTrashed()->latest("deleted_at")->get();
+
+    return view("classrooms.trashed",compact("classrooms"));
+}
+
+public function restore($id){
+    $classroom=Classroom::onlyTrashed()->findOrFail($id);
+$classroom->restore();
+   redirect()->route("classrooms.index")->with("success","Classroom ({$classroom->name}) restored");
+
+}
+public function forceDelete($id){
+    $classroom=Classroom::withTrashed()->findOrFail($id);
+$classroom->forceDelete();
+
+
+// now i can delete image
+            if($classroom->cover_img_path != null){
+  Classroom::deleteCoverImage($classroom->cover_img_path);
+    
+} 
+
+
+
+
+   redirect()->route("classroom.index")->with("success","Classroom ({$classroom->name}) deleted forever");
+
+}
+
+
+
+
+
+
+
+
+
 
 
 }

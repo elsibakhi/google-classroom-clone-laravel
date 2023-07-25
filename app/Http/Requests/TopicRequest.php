@@ -23,7 +23,7 @@ class TopicRequest extends FormRequest
     {
         return [
             "name"=>"required|string|max:255",
-            "classroom_id"=>"nullable|string",
+           
    
 
 

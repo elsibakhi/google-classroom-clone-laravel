@@ -16,7 +16,7 @@
 <div   class="modal fade"  id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action={{route("topics.store")}} method="post">
+      <form action={{route("topics.store",$classroom->id)}} method="post">
           @csrf
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">Add topic</h1>
@@ -32,7 +32,7 @@
                     @enderror
                 
                 </div>
-                <input type="hidden" name="classroom_id" value={{$classroom->id}} >
+             
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -149,7 +149,9 @@
                          
                          
                         </div>
-                     
+                    
+                        <a class="btn btn-info my-5"  href={{route("topics.trashed",$classroom->id)}} >Show tashed topics</a></li>
+
               </div>
           
           
@@ -191,9 +193,25 @@
       
                                   
                                   
-                                  <a class="dropdown-item"  href={{route("topics.edit",$topic->id)}} >Rename</a></li>
+                                  <a class="dropdown-item"  href={{route("topics.edit",["classroom"=>$classroom->id,"topic"=>$topic->id])}} >Rename</a></li>
+                                  <li>
+
+                                    <form class="d-inline" action={{route("topics.destroy",["classroom"=>$classroom->id,"topic"=>$topic->id])}} method="post">
+                                      @csrf
+                                      @method("delete")
                                 
-                                <x-btns-delete :action="route("topics.destroy",$topic->id)" />
+                                        <input class="dropdown-item"  type="submit" value="Delete">
+  
+                                      
+                                      
+                                      </form>
+                                  </li>
+
+                                  {{-- <x-btns-delete :action="route("topics.destroy",$topic->id)" /> --}}
+
+                            
+                                
+                                {{-- <x-btns-delete :action="route("topics.force.delete",$topic->id)" /> --}}
                  
                                
                               </ul>

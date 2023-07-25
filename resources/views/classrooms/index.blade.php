@@ -28,7 +28,8 @@
         
             
             <a href={{route("classrooms.create")}} type="button" class="btn btn-primary">Create a classroom</a>
-            <a href={{route("topics.index")}} type="button" class="btn btn-dark">Show all topics</a>
+            {{-- <a href={{route("topics.index",$classroom)}} type="button" class="btn btn-dark">Show all topics</a> --}}
+            <a href={{route("classrooms.trashed")}} type="button" class="btn btn-warning">Trashed Classrooms</a>
         
     
     

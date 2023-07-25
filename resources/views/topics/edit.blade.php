@@ -6,7 +6,7 @@
 
   
 <div class="container my-5">
-    <form class="w-50" action={{route("topics.update",$topic->id)}} method="POST">
+    <form class="w-50" action={{route("topics.update",["classroom"=>$classroom_id,"topic"=>$topic->id])}} method="POST">
       @method("PUT") 
    @csrf
 

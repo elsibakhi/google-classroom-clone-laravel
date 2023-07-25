@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\ClassroomTopicScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Topic extends Model
 {
-    use HasFactory;
+    use HasFactory , SoftDeletes;
 
 
 const CREATED_AT='created_at';
@@ -33,5 +35,13 @@ public $timestamps =false;
 protected $fillable =[
     "name","classroom_id","user_id"
 ]; 
+
+
+protected static function booted(){
+
+    static::addGlobalScope(new ClassroomTopicScope);
+
+}
+
 
 }
