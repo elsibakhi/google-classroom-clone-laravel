@@ -1,6 +1,6 @@
 <x-main-layout title="Classrooms"> 
     
-    
+
     
     
     <div class="container my-5">

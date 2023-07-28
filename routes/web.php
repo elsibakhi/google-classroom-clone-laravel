@@ -32,6 +32,7 @@ require __DIR__.'/auth.php';
 
 
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\TopicController;
 
 
@@ -144,3 +145,8 @@ Route::get("/classrooms/{classroom}/topics/{topic}",[TopicController::class,"sho
 //     "/classroom"=>ClassroomController::class,
 //     "/topics"=>TopicController::class
 // ]);
+
+
+
+Route::get("classrooms/{classroom}/join",[JoinClassroomController::class,"create"])->middleware("signed")->name("classrooms.join.create");
+Route::post("classrooms/{classroom}/join",[JoinClassroomController::class,"store"])->name("classrooms.join.store");

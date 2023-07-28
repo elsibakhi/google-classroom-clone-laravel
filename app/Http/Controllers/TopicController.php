@@ -26,7 +26,7 @@ class TopicController extends Controller
      */
     public function create()
     {
-        //
+       return abort(404);
     }
 
     /**
@@ -52,7 +52,7 @@ $validated["classroom_id"]=$classroom_id;
      */
     public function show(string $id)
     {
-        //
+        return abort(404);
     }
 
     /**

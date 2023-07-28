@@ -18,6 +18,8 @@
     </div>
   @endif --}}
 
+<x-alert class="alert-error" name="error"  />
+
     <form class="w-50" action={{route("classrooms.store")}} method="POST" enctype="multipart/form-data" >
       
       {{-- // three ways to csrf token --}}

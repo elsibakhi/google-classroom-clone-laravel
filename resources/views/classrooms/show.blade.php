@@ -91,6 +91,7 @@
           <h1>{{$classroom->name}} # {{$classroom->id}}</h1>
       <h3>{{$classroom->section}}</h3>
       
+      <div>invitation_link : <a href="{{$invitation_link}}">{{$invitation_link}}</a></div>
       <div class="row">
       <div class="col-md-8">
       <div class="border rounded p-3 text-center" >

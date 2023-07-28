@@ -9,7 +9,10 @@ use App\Models\Classroom;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Http\Requests\ClassroomRequest;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 
 class ClassroomController extends Controller
 {
@@ -137,8 +140,26 @@ $classroom = new Classroom();
 // alter way to add code
 // $request->merge(["code"=>Str::random(8)]);
 $validated["code"]=Str::random(8);
+
+DB::beginTransaction();
+try{
 // --way2-- this way  depend on fillable property  -- mass assignment
-$classroom::create($validated); // if we use form fields names similer to fields names in the table
+$classroom=Classroom::create($validated); // if we use form fields names similer to fields names in the table
+
+$classroom->join(Auth::id(),"teacher");
+
+
+
+
+DB::commit();
+
+}catch(Exception $e){
+    DB::rollBack();
+
+    return back()->with("error",$e->getMessage())
+->withInput();
+}
+
 
 // --way3--  this way  depend on fillable property  -- mass assignment
 // $classroom = new Classroom($request->all());
@@ -171,10 +192,14 @@ return  redirect()->route("classrooms.index");
  //  alter way to get classroom -->  Classroom:where("id","=",$id)->first();
 
  $topics=$classroom->topics()->get();
-
+ $invitation_link =URL::signedRoute("classrooms.join.create",[ // signedRoute protect the route with singnture // but you should to add signed middleware in route defenation
+    "classroom"=>$classroom->id,
+    "code"=>$classroom->code // this will showed as query string 
+ ]);
         return view("classrooms.show")->with([
             "classroom"=>$classroom
             , "topics"=>$topics
+            , "invitation_link"=>$invitation_link
         ]);
     }
     public function edit($id){ 
