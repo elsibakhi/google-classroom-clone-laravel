@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Classroom;
+use App\Observers\ClassroomObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -20,12 +22,19 @@ class EventServiceProvider extends ServiceProvider
         ],
     ];
 
+ // another way to bind the model with observer
+//  protected $observers=[
+//     Classroom::class => ClassroomObserver::class
+//  ];
+
+
     /**
      * Register any events for your application.
      */
     public function boot(): void
     {
-        //
+         // another way to bind the model with observer
+        // Classroom::observe(ClassroomObserver::class);
     }
 
     /**

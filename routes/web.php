@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\ClassroomController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-})->name("home");
+Route::get('/', [ClassroomController::class,"index"])->name("home");
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,7 +31,6 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 
-use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\TopicController;
 

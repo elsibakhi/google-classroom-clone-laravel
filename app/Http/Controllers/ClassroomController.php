@@ -87,7 +87,7 @@ return view("classrooms.index",compact("classrooms"));
 
 $validated=$request->validated(); // it return validated inputs from ClassroomRequest
 
-$validated["user_id"]=Auth::id();
+
 
     //    $request->input("name"); // for both
 
@@ -139,8 +139,11 @@ $classroom = new Classroom();
 
 // alter way to add code
 // $request->merge(["code"=>Str::random(8)]);
-$validated["code"]=Str::random(8);
 
+
+
+// $validated["code"]=Str::random(8);
+// $validated["user_id"]=Auth::id();
 DB::beginTransaction();
 try{
 // --way2-- this way  depend on fillable property  -- mass assignment
@@ -336,16 +339,16 @@ public function forceDelete($id){
 $classroom->forceDelete();
 
 
-// now i can delete image
-            if($classroom->cover_img_path != null){
-  Classroom::deleteCoverImage($classroom->cover_img_path);
+// // now i can delete image
+//             if($classroom->cover_img_path != null){
+//   Classroom::deleteCoverImage($classroom->cover_img_path);
     
-} 
+// } 
 
 
 
 
-   redirect()->route("classroom.index")->with("success","Classroom ({$classroom->name}) deleted forever");
+   redirect()->route("classrooms.index")->with("success","Classroom ({$classroom->name}) deleted forever");
 
 }
 
