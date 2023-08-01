@@ -26,10 +26,7 @@ public static string $disk = "public";
 
  // if i need to prvent to add some column  -- not recommnded
  // protected $guarded =["id"]; // blacklist
- public function topics(): HasMany
- {
-     return $this->hasMany(Topic::class);
- }
+
 
 
 
@@ -207,6 +204,29 @@ public function getNameAttribute($value){
 //         set: fn ($value) => strtolower($value)
 //     );
 // }
+
+
+
+
+
+
+
+
+
+public function classworks():HasMany{
+    return $this->hasMany(Classwork::class,"classroom_id","id"); // laravel will add "classroom_id" as forgien key by default (modelname_id) and add "id" as primary key
+
+}
+
+public function topics(): HasMany
+{
+    return $this->hasMany(Topic::class);
+}
+
+
+
+
+
 
 
 }

@@ -33,8 +33,11 @@ class ClassroomObserver
      */
     public function deleted(Classroom $classroom): void
     {
+       if( $classroom->isForceDeleting()){ // because when force delete classroom laravel trager the two events (deleted,forceDeleted)
+        return ;
+       }
         $classroom->status="deleted";
-        $classroom->save();
+        $classroom->save(); // after force delete classroom  this line will insert a new classroom with same values of deleted classroom so the force deleation will not work
     }
 
     /**
@@ -51,6 +54,9 @@ $classroom->save();
      */
     public function forceDeleted(Classroom $classroom): void
     {
-        //
+    //        if($classroom->cover_img_path != null){
+    //     Classroom::deleteCoverImage($classroom->cover_img_path);
+          
+    //   } 
     }
 }

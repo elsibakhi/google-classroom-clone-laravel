@@ -1,4 +1,4 @@
-<form class="d-inline" action={{$action}} method="post">
+<form class="d-inline" action='{{$action}}' method="post">
     @csrf
     @method("delete")
     

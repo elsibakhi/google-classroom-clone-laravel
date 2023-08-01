@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\ClassroomTopicScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Topic extends Model
@@ -43,5 +44,8 @@ protected static function booted(){
 
 }
 
+public function classworks():HasMany{
+    return $this->hasMany(Classwork::class,"topics_id","id"); 
 
+}
 }

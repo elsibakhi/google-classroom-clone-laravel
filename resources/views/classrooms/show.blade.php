@@ -142,7 +142,7 @@
                           @php
                               $x=2;
                           @endphp
-@foreach ($topics as $topic)
+@foreach ($classroom->topics as $topic)
 <input type="radio" class="btn-check " name="vbtn-radio" id={{"vbtn-radio".$x}} autocomplete="off">
 <label class="btn btn-outline-secondary" for={{"vbtn-radio".$x++}} >{{$topic->name}}</label>
 @endforeach
@@ -168,67 +168,92 @@
                           
                           
                           <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">Topic</a></li>
+                          <a class="dropdown-item" href={{route("classrooms.classworks.create",[$classroom->id,"type"=>"assignment"])}} >Assignment</a></li>
+                          <a class="dropdown-item" href={{route("classrooms.classworks.create",[$classroom->id,"type"=>"material"])}} >Material</a></li>
+                          <a class="dropdown-item" href={{route("classrooms.classworks.create",[$classroom->id,"type"=>"question"])}} >Question</a></li>
                        
                       </ul>
                   </div>
 
                       <div class="accordion my-5" id="accordionPanelsStayOpenExample">
 
-                          @foreach ($topics as $topic)
+                          @forelse ($classworks as $topic_id => $collection)
                        
                        
 
                           <div class="accordion-item p-3">
                             <h2 class="accordion-header">
                               <div class="d-flex justify-content-between accordion_topics" >
-                           <div class="w-75" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{$topic->id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                              {{$topic->name}}
+                           <div class="w-75" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{$topic_id}}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                              {{$collection->first()->topic->name??"Without topic"}}
                           </div>   
-
-                          <div class="dropdown-center">
-                              <div class="" style="cursor: pointer;"  data-bs-toggle="dropdown" aria-expanded="false">
-                                  <i class="fa-solid fa-ellipsis-vertical"></i>
-                              </div>
-                              <ul class="dropdown-menu">
-                                <li>
-      
-                                  
-                                  
-                                  <a class="dropdown-item"  href={{route("topics.edit",["classroom"=>$classroom->id,"topic"=>$topic->id])}} >Rename</a></li>
-                                  <li>
-
-                                    <form class="d-inline" action={{route("topics.destroy",["classroom"=>$classroom->id,"topic"=>$topic->id])}} method="post">
-                                      @csrf
-                                      @method("delete")
+                           @if ($topic_id != null)
+                           <div class="dropdown-center">
+                               <div class="" style="cursor: pointer;"  data-bs-toggle="dropdown" aria-expanded="false">
+                                   <i class="fa-solid fa-ellipsis-vertical"></i>
+                               </div>
+                               <ul class="dropdown-menu">
+                                 <li>
+       
+                                   
+                                   
+                                   <a class="dropdown-item"  href={{route("topics.edit",["classroom"=>$classroom->id,"topic"=>$topic_id])}} >Rename</a></li>
+                                   <li>
+ 
+                                     <form class="d-inline" action={{route("topics.destroy",["classroom"=>$classroom->id,"topic"=>$topic_id])}} method="post">
+                                       @csrf
+                                       @method("delete")
+                                 
+                                         <input class="dropdown-item"  type="submit" value="Delete">
+   
+                                       
+                                       
+                                       </form>
+                                   </li>
+ 
+                                   {{-- <x-btns-delete :action="route("topics.destroy",$topic->id)" /> --}}
+ 
+                             
+                                 
+                                 {{-- <x-btns-delete :action="route("topics.force.delete",$topic->id)" /> --}}
+                  
                                 
-                                        <input class="dropdown-item"  type="submit" value="Delete">
-  
-                                      
-                                      
-                                      </form>
-                                  </li>
-
-                                  {{-- <x-btns-delete :action="route("topics.destroy",$topic->id)" /> --}}
-
-                            
-                                
-                                {{-- <x-btns-delete :action="route("topics.force.delete",$topic->id)" /> --}}
-                 
+                               </ul>
+                           </div>
                                
-                              </ul>
-                          </div>
+                           @endif
                         
                               </div>
                             </h2>
                             <hr>
-                            <div id="panelsStayOpen-collapse{{$topic->id}}" class="accordion-collapse collapse show">
+                            <div id="panelsStayOpen-collapse{{$topic_id}}" class="accordion-collapse collapse show">
                               <div class="accordion-body">
-                               topic content
+                               
+                   @foreach ($collection as $classwork)
+                   <div class="card">
+                    <div class="card-header">
+                      {{$classwork->created_at->diffForHumans()}} - {{$classwork->type}}
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">{{$classwork->title}}</h5>
+                      <p class="card-text">{{$classwork->description}}.</p>
+                      <a href={{route("classrooms.classworks.show",[$classroom->id,$classwork->id])}} class="btn btn-primary">show</a>
+                    </div>
+                  </div>
+                    
+                    
+
+                   @endforeach
+
+
                               </div>
                             </div>
                           </div>
+
+                          @empty 
+                         <p> No topics found  </p>
                       
-                          @endforeach
+                          @endforelse
                         </div>
 
                     </div>

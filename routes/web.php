@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\ClassworkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -149,3 +150,9 @@ Route::get("/classrooms/{classroom}/topics/{topic}",[TopicController::class,"sho
 
 Route::get("classrooms/{classroom}/join",[JoinClassroomController::class,"create"])->middleware("signed")->name("classrooms.join.create");
 Route::post("classrooms/{classroom}/join",[JoinClassroomController::class,"store"])->name("classrooms.join.store");
+
+
+
+// to create nasted routes
+Route::resource('classrooms.classworks', ClassworkController::class); // way 1
+// Route::resource('classrooms.classworks', ClassworkController::class)->shallow();  // way 2

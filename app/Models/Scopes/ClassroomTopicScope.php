@@ -13,6 +13,6 @@ class ClassroomTopicScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-       $builder->where("classroom_id",27);
+    //    $builder->where("classroom_id",27);
     }
 }

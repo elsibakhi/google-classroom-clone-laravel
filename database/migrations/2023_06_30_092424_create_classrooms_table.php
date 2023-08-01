@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string("cover_img_path")->nullable();
             $table->string("theme")->nullable();
             $table->foreignId('user_id')->nullable()->constrained("users",'id')->nullOnDelete();
-            $table->enum("status",["active","archived"]);//  i forget this =>>> ->default("avtive");
+            $table->enum("status",["active","archived"]);//  laravel set the first status as default "active" if we set default value
             $table->timestamps();
         });
     }
