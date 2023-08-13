@@ -4,7 +4,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ClassroomController;
+use App\Http\Controllers\ClassroomPeopleController;
 use App\Http\Controllers\ClassworkController;
+use App\Http\Controllers\CommentController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +20,15 @@ use App\Http\Controllers\ClassworkController;
 |
 */
 
-Route::get('/', [ClassroomController::class,"index"])->name("home");
+// dd(Auth::id());
+if (Auth::check()) {
+    Route::get('/', [ClassroomController::class,"index"])->name("home");
+}else{
+    Route::get('/', function(){return view('welcome');})->name("home");
+    
+}
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -34,7 +45,7 @@ require __DIR__.'/auth.php';
 
 use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\TopicController;
-
+use App\Models\Comment;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,9 +79,12 @@ Route::middleware('auth')->group(function () {
         Route::get("/","trashed")->name("trashed");
         Route::put("/{classroom}","restore")->name("restore");
         Route::delete("/forceDelete/{classroom}","forceDelete")->name("force.delete");
+        
+        
+        
     });
-  
-  
+    
+    
     Route::prefix("/classrooms/{classroom}/topics/trashed")->as('topics.')->controller(TopicController::class)->group(function(){
         Route::get("/","trashed")->name("trashed");
         Route::put("/{topic}","restore")->name("restore");
@@ -82,9 +96,14 @@ Route::middleware('auth')->group(function () {
 
 
 
+Route::get("classrooms/{classroom}/join",[JoinClassroomController::class,"create"])->middleware("signed")->name("classrooms.join.create");
+Route::post("classrooms/{classroom}/join",[JoinClassroomController::class,"store"])->name("classrooms.join.store");
+
 
 Route::resource("/classrooms",ClassroomController::class);
 
+// Route::get("/classroom/{classroom}/people",ClassroomPeopleController::class)->name("classrooms.people"); // because i used __invoke magic method i used just ClassroomPeopleController::class
+Route::delete("/classroom/{classroom}/people/delete",[ClassroomPeopleController::class,"destroy"])->name("classrooms.people.destroy"); 
 // Route::get("/classrooms",[ClassroomController::class,"index"])->name("classrooms.index");
 // Route::get("/classrooms/create",[ClassroomController::class,"create"])->name("classrooms.create");
 // Route::post("/classrooms/store",[ClassroomController::class,"store"])->name("classrooms.store");
@@ -148,11 +167,15 @@ Route::get("/classrooms/{classroom}/topics/{topic}",[TopicController::class,"sho
 
 
 
-Route::get("classrooms/{classroom}/join",[JoinClassroomController::class,"create"])->middleware("signed")->name("classrooms.join.create");
-Route::post("classrooms/{classroom}/join",[JoinClassroomController::class,"store"])->name("classrooms.join.store");
+
 
 
 
 // to create nasted routes
 Route::resource('classrooms.classworks', ClassworkController::class); // way 1
 // Route::resource('classrooms.classworks', ClassworkController::class)->shallow();  // way 2
+
+
+
+
+Route::resource("comments",CommentController::class);

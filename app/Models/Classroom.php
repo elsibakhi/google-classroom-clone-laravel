@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
@@ -129,12 +131,29 @@ public static function scopeRecent(Builder $query){
 //---------------- join classroom with users
 
 public function join($user_id,$role="student"){
-DB::table("classroom_user")->insert([
-    "classroom_id"=> $this->id,  
-    "user_id"=> $user_id,
-    "role"=>$role,
-    "created_at"=> now(),
-]);
+    // Classroom::findOrFail($this->id)->users()->findOrFail($user_id);  // to ensure that there is relation between them
+    $this->users()->attach($user_id,["role"=>$role,"created_at"=> now()]); // insert in pivot table
+    // $this->users()->attach([  //use this if you need to insert multiple records
+    //     $user_id=>
+    //     [
+    //         "role"=>$role,
+    //         "created_at"=> now()
+            
+    //     ],
+    //     $user_id2=>
+    //     [
+    //         "role"=>$role2,
+    //         "created_at"=> now()
+            
+    //     ],
+    
+    // ]); // insert in pivot table
+// DB::table("classroom_user")->insert([
+//     "classroom_id"=> $this->id,  
+//     "user_id"=> $user_id,
+//     "role"=>$role,
+//     "created_at"=> now(),
+// ]);
 }
 
 
@@ -221,6 +240,30 @@ public function classworks():HasMany{
 public function topics(): HasMany
 {
     return $this->hasMany(Topic::class);
+}
+public function users(): BelongsToMany
+{
+    return $this->belongsToMany(
+        User::class, //related model
+    "classroom_user", // pivot table (middle)
+    "classroom_id", // FK foreign key for current model in pivot table
+    "user_id",// FK foreign key for related model in pivot table
+    "id", // PK for current model
+    "id")  // PK for related model
+    ->withPivot(["role","created_at"])
+    ->as('join') // to get pivot elements by using join instead of pivot
+
+   ;
+}
+public function teachers()
+{
+    return $this->users()
+    ->wherePivot("role","=","teacher");
+}
+public function students()
+{
+    return $this->users()
+    ->wherePivot("role","=","student");
 }
 
 

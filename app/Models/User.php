@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -43,4 +45,54 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+// many to many with classroom
+    public function classrooms(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Classroom::class, //related model
+        "classroom_user", // pivot table (middle)
+        "user_id",// FK foreign key for  current model in pivot table
+        "classroom_id", // FK foreign key for  related model in pivot table
+        "id", // PK for current model
+        "id")  // PK for related model
+        ->withPivot(["role","submitted_at","created_at"])
+        ->as('join') // to get pivot elements by using join instead of pivot
+    
+       ;
+    }
+    public function teachers()
+    {
+        return $this->classrooms()
+        ->wherePivot("role","=","teacher");
+    }
+    public function students()
+    {
+        return $this->classrooms()
+        ->wherePivot("role","=","student");
+    }
+
+    // there is two relations  with classroom 
+
+// one to many with classroom
+    public function createdClassrooms (){
+        return $this->hasMany(Classroom::class);
+    }
+
+
+
+
+    public function classworks():BelongsToMany {
+        return $this->belongsToMany(Classwork::class,'classwork_user')->withPivot(["grade","submitted_at","status","created_at"])
+        ->using(ClassworkUser::class);
+
+
+    }
+
+
+    public function comments() : HasMany {
+        return $this->hasMany(Comment::class)/*->latest()*/; // if i need to modify query on the relation (latest)
+    }
+
 }

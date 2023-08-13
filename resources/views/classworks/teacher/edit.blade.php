@@ -14,11 +14,15 @@
             <h1>Edit classwork</h1>
             <hr>
            
-    
-    <x-classwork.form button-label="Edit {{$classwork->type}}" title='{{$classwork->title}}' description='{{$classwork->description}}' topic-id='{{$classwork->topic->id??null}}'  :topics='$classroom->topics' />
+     
+    <x-classwork.form button-label="Edit {{$classwork->type}}" 
+       :classroom="$classroom"
+       type='{{$type}}'
+       :classwork="$classwork"
+         />
     
           </form>
-    
+ 
     </div>
       
     

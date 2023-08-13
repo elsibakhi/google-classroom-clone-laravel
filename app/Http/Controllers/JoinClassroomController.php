@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Classroom;
-
+use App\Models\Scopes\UserClassroomScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -49,10 +49,16 @@ return redirect()->route("classrooms.show",$id);
 }
 protected function exists($classroom_id,$user_id){
   
-    $exists=DB::table('classroom_user') // i use DB because i dont need to create model to this table
-    ->where("classroom_id",$classroom_id)
-    ->where("user_id",$user_id)
-    ->exists();
+    // $exists=DB::table('classroom_user') // i use DB because i dont need to create model to this table
+    // ->where("classroom_id",$classroom_id)
+    // ->where("user_id",$user_id)
+    // ->exists();
+
+
+  $exists=Classroom::withoutGlobalScope(UserClassroomScope::class)->findOrFail($classroom_id)->users()->where("id","=",$user_id)->exists();
+//   Classroom::findOrFail($classroom_id)->users()->where("id","=",$user_id)->exists();  // another way
+
+
 
 if($exists){
     throw new Exception("Erorr");

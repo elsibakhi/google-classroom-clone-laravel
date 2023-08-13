@@ -16,7 +16,7 @@
 <body  >
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-5">
         <div class="container-fluid">
-          <a class="navbar-brand" href={{route("home")}}>{{config("app.name")}}</a>
+          <a class="navbar-brand" href={{route("classrooms.index")}}>{{config("app.name")}}</a>
       {{-- i use config instead env -- becaues we can cache config but env not --}}
       {{-- we should env in configration files just  -- these is true use --}}
       {{-- if we cache configration we can't use env just cached configration files   --}}
@@ -27,7 +27,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href={{route("home")}}>{{Auth::user()->name}}</a>
+                <a class="nav-link active" aria-current="page" href={{route("classrooms.index")}}>{{Auth::user()->name}}</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>

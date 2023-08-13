@@ -2,6 +2,6 @@
     @csrf
     @method("delete")
     
-    
+    {{$slot}}
     <input class="btn btn-danger"  type="submit" value="Delete">
     </form>

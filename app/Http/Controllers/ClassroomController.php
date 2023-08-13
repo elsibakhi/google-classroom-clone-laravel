@@ -118,7 +118,7 @@ class ClassroomController extends Controller
             //  ]);
             $validated["cover_img_path"] = $path;
         } else {
-            $cover_namber = rand(1, 5);
+            $cover_namber = rand(1, 3);
             $validated["cover_img_path"] = "/covers/$cover_namber.jpg";
         }
 
@@ -196,7 +196,7 @@ class ClassroomController extends Controller
             "code" => $classroom->code // this will showed as query string 
         ]);
 
-        $classworks=$classroom->classworks->groupBy("topic_id");
+        $classworks=$classroom->classworks->load("topic")->groupBy("topic_id");
         return view("classrooms.show",compact(
             "classroom","classworks", "invitation_link"
         ));
@@ -331,15 +331,18 @@ class ClassroomController extends Controller
         $classroom->forceDelete();
 
 
-        // // now i can delete image
-        //             if($classroom->cover_img_path != null){
-        //   Classroom::deleteCoverImage($classroom->cover_img_path);
+      //  now i can delete image
+                    if($classroom->cover_img_path != null){
+                        if(substr($classroom->cover_img_path,1,6)!="covers"){
 
-        // } 
+                            Classroom::deleteCoverImage($classroom->cover_img_path);
+                        }
+
+        } 
 
 
 
 
-        redirect()->route("classrooms.index")->with("success", "Classroom ({$classroom->name}) deleted forever");
+      return  back()->with("success", "Classroom ({$classroom->name}) deleted forever");
     }
 }
