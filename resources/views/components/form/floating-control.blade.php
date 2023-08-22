@@ -7,6 +7,6 @@
 <div class="my-3">
   
     {{ $label }}
-  {{ $slot }}
+    {{ $slot }}
     <x-feedback-error name={{$feedbackname}} />
   </div>

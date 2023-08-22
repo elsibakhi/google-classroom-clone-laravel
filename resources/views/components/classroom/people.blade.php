@@ -23,9 +23,13 @@
                 <p class=" mb-1 ">{{$teacher->name}}</p>
                 {{-- <p class="mb-0">{{$teacher->join->role}}</p> --}}
 
-               <x-btns.delete  :action="route('classrooms.people.destroy',$classroom->id)" >
-              <input type="hidden" name="user_id" value="{{$teacher->id}}" />
-              </x-btns.delete>
+                
+@if ($classroom->user_id==Auth::id())
+    
+<x-btns.delete  :action="route('classrooms.people.destroy',$classroom->id)" >
+<input type="hidden" name="user_id" value="{{$teacher->id}}" />
+</x-btns.delete>
+@endif
              
               </li>
               @endforeach
@@ -50,9 +54,13 @@
                 
                 <p class=" mb-1 ">{{$student->name}}</p>
                 {{-- <p class="mb-0">{{$student->join->role}}</p> --}}
-                <x-btns.delete  :action="route('classrooms.people.destroy',$classroom->id)" >
+                @if ($classroom->user_id==Auth::id())
+    
+          <x-btns.delete  :action="route('classrooms.people.destroy',$classroom->id)" >
                   <input type="hidden" name="user_id" value="{{$student->id}}" />
                 </x-btns.delete>
+@endif
+      
                
               </li>
               @endforeach

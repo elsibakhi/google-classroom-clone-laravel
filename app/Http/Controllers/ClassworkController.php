@@ -18,12 +18,14 @@ class ClassworkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Classroom $classroom)
+
+
+     public function index(Classroom $classroom)
     {
-        
+
   $classworks = $classroom->classworks()->with("topics");
   //   $classworks = $classroom->classworks()->get(); // this code is the same of privous line
-  
+
 //   $classworks = $classroom->classworks()->where("type","=",Classwork::TYPE_ASSIGNNMENT)->get(); //get assignment classworks just
 // if you need to implement addtional queries use <<classworks()>> instaed of <<classworks>>
 
@@ -41,7 +43,7 @@ protected function getType(Request $request){
         ClassworkType::ASSIGNNMENT->value,
         ClassworkType::MATERIAL->value,
         ClassworkType::QUESTION->value,
-       
+
     ];
 
     if(!in_array($type,$allowed_types)){
@@ -54,6 +56,7 @@ protected function getType(Request $request){
 
     public function create( Request $request, Classroom $classroom)
     {
+        $this->authorize("create", [Classwork::class, $classroom]);
         $type = $this->getType($request);
         $topics=$classroom->topics;
         return view("classworks.create",compact("classroom","type","topics"));
@@ -64,7 +67,7 @@ protected function getType(Request $request){
      */
     public function store(Request $request,Classroom $classroom)
     {
-
+        $this->authorize("create", [Classwork::class, $classroom]);
         $type = $this->getType($request);
                 $request->validate([
                     "title"=>["required","string","max:255"],
@@ -85,14 +88,14 @@ $request->merge([
     DB::transaction( function () use ($request,$classroom){
         // $data=[
         //     "user_id"=>Auth::id(),
-           
+
         //     "type"=>$type,
         //     "title"=>$request->input("title"),
         //     "description"=>$request->input("description"),
         //     "published_at"=>$request->input("published_at"),
         //     "topic_id"=>$request->input("topic_id"),
         //     "options"=> $request->input("options")
-            
+
             //json_encode(
         //         [
         //       "grade" => $request->input("grade"),
@@ -100,14 +103,14 @@ $request->merge([
         // ]
      //)
     // ,
-            
+
       //  ];
-    
+
                         // Classwork::create($request->all());
-                     $classwork = $classroom->classworks()->create($request->all()); // this code will auto pass classroom_id 
-                    
+                     $classwork = $classroom->classworks()->create($request->all()); // this code will auto pass classroom_id
+
                      $classwork->users()->attach($request->students);
-     
+
     } );
 
 // }catch(QueryException  $ex){
@@ -115,7 +118,7 @@ $request->merge([
 // }
     return back()
     ->with("success","Classwork created");
-    
+
             }
 
     /**
@@ -123,11 +126,11 @@ $request->merge([
      */
     public function show(Classroom $classroom,Classwork $classwork)
     {
+        $this->authorize("view", $classwork); // but this is protected by scope
 $classroom_user=DB::table("classroom_user")->where("user_id","=",Auth::id())->where("classroom_id","=",$classroom->id)->first();
-$role=$classroom_user->role;
 
-
-        return view("classworks.".$role.".show",compact("classroom","classwork"));
+        $submissions= $classwork->submissions()->where("user_id",Auth::id())->get();
+     return view("classworks.show",compact("classroom","classwork", "submissions"));
     }
 
     /**
@@ -135,9 +138,10 @@ $role=$classroom_user->role;
      */
     public function edit(Classroom $classroom,Classwork $classwork)
     {
+        $this->authorize("update", [Classwork::class, $classroom]);
         $type = $classwork->type->value;
-      
-        return view("classworks.teacher.edit",compact("classroom","classwork","type"));
+
+        return view("classworks.edit",compact("classroom","classwork","type"));
     }
 
     /**
@@ -145,8 +149,9 @@ $role=$classroom_user->role;
      */
     public function update(Request $request, Classroom $classroom,Classwork $classwork)
     {
+        $this->authorize("update", [Classwork::class, $classroom]);
         $type = $classwork->type->value;
-      
+
         $request->validate([
             "title"=>["required","string","max:255"],
             "description"=>["nullable","string"],
@@ -159,8 +164,8 @@ $role=$classroom_user->role;
                $classwork ->update(
                     $request->all()
                 );
-           
-          
+
+
               $classwork->users()->sync($request->students);
 
 
@@ -175,6 +180,7 @@ $role=$classroom_user->role;
      */
     public function destroy(Classroom $classroom,Classwork $classwork)
     {
+        $this->authorize("delete", $classwork);
         $classwork->delete();
 
         return redirect()->route("classrooms.show",[$classroom])

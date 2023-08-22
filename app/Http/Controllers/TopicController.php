@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TopicRequest;
 use App\Models\Classroom;
+
 use Illuminate\Http\Request;
 use App\Models\Topic;
+use Illuminate\Support\Facades\Gate;
 class TopicController extends Controller
 {
     /**
@@ -35,14 +37,16 @@ class TopicController extends Controller
     public function store(TopicRequest $request,$classroom_id)
     {
         //
- 
+
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
+
     $validated=$request->validated();
 $validated["classroom_id"]=$classroom_id;
 
 
-    Topic::create($validated); 
+    Topic::create($validated);
 
-    
+
     return  redirect()->back()->with("success","The opreation done");
 
     }
@@ -59,9 +63,11 @@ $validated["classroom_id"]=$classroom_id;
      * Show the form for editing the specified resource.
      */
     public function edit($classroom_id,$topic_id)
+
     {
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
         $topic=Topic::findOrfail($topic_id);
-        
+
         return view("topics.edit",["topic"=>$topic , "classroom_id"=>$classroom_id]);
     }
 
@@ -71,6 +77,7 @@ $validated["classroom_id"]=$classroom_id;
     public function update(TopicRequest $request,$classroom_id ,$topic_id)
     {
         //
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
 
         $validated=$request->validated();
         $topic=Topic::findOrfail($topic_id);
@@ -88,6 +95,8 @@ $validated["classroom_id"]=$classroom_id;
     public function destroy( $classroom_id ,$topic_id)
     {
         //
+
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
         Topic::destroy($topic_id);
 
         return  redirect()->back()->with("success","The opreation done");
@@ -95,13 +104,15 @@ $validated["classroom_id"]=$classroom_id;
     }
     public function trashed($classroom_id)
     {
-        $topics=Topic::onlyTrashed()->latest("deleted_at")->get();  
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
+        $topics=Topic::onlyTrashed()->latest("deleted_at")->get();
 
 
        return view("topics.trashed",["topics"=>$topics,"classroom_id"=>$classroom_id]);
     }
     public function restore($classroom_id,$topic_id)
     {
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
         $topic=Topic::onlyTrashed()->findOrfail($topic_id);
 $topic->restore();
 
@@ -110,6 +121,7 @@ $topic->restore();
 
 
 public function forceDelete($classroom_id,$topic_id){
+        Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
     Topic::withTrashed()->findOrFail($topic_id)->forceDelete();
 
     return back()->with("success","The opreation done");

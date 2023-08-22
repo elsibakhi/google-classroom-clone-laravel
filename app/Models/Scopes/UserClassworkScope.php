@@ -15,8 +15,16 @@ class UserClassworkScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-       $builder->where("user_id","=",Auth::id())->orwhereHas("users",function (Builder $query){
-        $query->where("id","=",Auth::id());
+        $id = Auth::id();
+        $builder->whereRaw(
+            " classroom_id in (
+                  SELECT id FROM classrooms WHERE classrooms.id=classworks.classroom_id AND EXISTS (
+                    SELECT 1 FROM classroom_user WHERE classrooms.id=classroom_user.classroom_id AND classroom_user.user_id=$id AND classroom_user.role='teacher'
+
+                    )
+                ) "
+        )->orwhereHas("users",function (Builder $query) use($id){
+        $query->where("id","=",$id);
        });
     }
 }

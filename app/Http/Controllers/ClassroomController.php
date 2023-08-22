@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\URL;
 
 class ClassroomController extends Controller
 {
-    // Actions 
+    // Actions
     public function __construct()
     {
         $this->middleware("auth");
@@ -30,7 +30,7 @@ class ClassroomController extends Controller
         // $classrooms= Classroom::all(); //return  collection of classrooms
         // <<collection>> is class in php we can act with it the same as array
 
-        $classrooms = Classroom::orderBy("name", "DESC")->active()->get(); // now we cant use all but we can use -> first
+        $classrooms = Classroom::latest("updated_at")->active()->get(); // now we cant use all but we can use -> first
         // active is a scope method i declare it in classroom model
         return view("classrooms.index", compact("classrooms"));
     }
@@ -57,7 +57,7 @@ class ClassroomController extends Controller
 
 
         // <<<<<<<<<<<<<<<< i replace  $request->validate($rules,$messages);  with ClassroomRequest   >>>>>>>>>>>>>>>
-        //  $rules=  [ // return array with validated inputs 
+        //  $rules=  [ // return array with validated inputs
         //     "name"=> "required|string|max:255",
         //     "section"=> ["nullable","string","max:255" , function ($attribute,$value,$fail){  // if i need to create custom validation by clsuer function
         // if($value=="admin"){
@@ -77,7 +77,7 @@ class ClassroomController extends Controller
         // ],
 
 
-        // ];     
+        // ];
 
 
         // if i need to customize error messages
@@ -102,8 +102,8 @@ class ClassroomController extends Controller
         // $request("name")  // request as array
 
         //$request->all()  / get all fields in array
-        // $request->only("name","section")   get specfic fields        
-        // $request->except("name","section")   get specfic fields  -- except some fields        
+        // $request->only("name","section")   get specfic fields
+        // $request->except("name","section")   get specfic fields  -- except some fields
 
         if ($request->hasFile("cover_image")) {
             $file = $request->file("cover_image");  // file to get file (retuen upLoadedFile object)
@@ -179,24 +179,26 @@ class ClassroomController extends Controller
         return  redirect()->route("classrooms.index");
     }
     // if i need to find classroom directly by id without use Classroom::find($id)
-    // i will put (Classroom $classroom) instead of ($id) as parameter 
+    // i will put (Classroom $classroom) instead of ($id) as parameter
     // this will work just with (resouce route )
     // the name of this method is << model binding >>
 
     public function show(Classroom $classroom)
     { // the objects that i need it from laravel ,i put it first
 
+
         // i use Classroom $classroom in resouce so i will not use this
         // $classroom=Classroom::findOrFail($id);
         //  alter way to get classroom -->  Classroom:where("id","=",$id)->first();
 
-        
+        $this->authorize("view", $classroom);
         $invitation_link = URL::signedRoute("classrooms.join.create", [ // signedRoute protect the route with singnture // but you should to add signed middleware in route defenation
             "classroom" => $classroom->id,
-            "code" => $classroom->code // this will showed as query string 
+            "code" => $classroom->code // this will showed as query string
         ]);
 
         $classworks=$classroom->classworks->load("topic")->groupBy("topic_id");
+        // dd($classworks);
         return view("classrooms.show",compact(
             "classroom","classworks", "invitation_link"
         ));
@@ -204,6 +206,10 @@ class ClassroomController extends Controller
     public function edit($id)
     {
         $classroom = Classroom::find($id);
+
+
+        $this->authorize("update", $classroom);
+
 
         return view("classrooms.edit", ["classroom" => $classroom]);
     }
@@ -213,7 +219,7 @@ class ClassroomController extends Controller
     public function update(Request $request, Classroom $classroom)
     {
 
-
+        $this->authorize("update", $classroom);
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'section' => ['nullable', 'string', 'max:255'],
@@ -242,7 +248,7 @@ class ClassroomController extends Controller
         // $classroom->code=Str::random(8);
         // $classroom->save();
 
-        //2- 
+        //2-
         if ($request->hasFile("cover_image")) {
 
             $file = $request->file("cover_image");
@@ -251,9 +257,9 @@ class ClassroomController extends Controller
             $path = Classroom::uploadCoverImage($file);
 
 
-            // solution 1 to replace img 
+            // solution 1 to replace img
             //$name = $classroom->cover_img_path ?? (Str::random(40).".".$file->getClientOriginalExtension());
-            //   $path=$file->storeAs("/",$name,"public"); 
+            //   $path=$file->storeAs("/",$name,"public");
 
 
             $request->merge([
@@ -261,7 +267,7 @@ class ClassroomController extends Controller
             ]);
 
             if ($classroom->cover_img_path) { // to ensure that img is exist
-                // solution 2 to replace img 
+                // solution 2 to replace img
                 Classroom::deleteCoverImage($classroom->cover_img_path);
             }
         }
@@ -278,6 +284,7 @@ class ClassroomController extends Controller
 
     public function destroy(Classroom $classroom)
     {
+        $this->authorize("delete", $classroom);
         // delete classroom first to ensure there in no problems
         $classroom->delete();
 
@@ -314,7 +321,7 @@ class ClassroomController extends Controller
 
     public function trashed()
     {
-        $classrooms = Classroom::onlyTrashed()->latest("deleted_at")->get();
+        $classrooms = Classroom::onlyTrashed()->owner()->latest("deleted_at")->get();
 
         return view("classrooms.trashed", compact("classrooms"));
     }
@@ -322,12 +329,14 @@ class ClassroomController extends Controller
     public function restore($id)
     {
         $classroom = Classroom::onlyTrashed()->findOrFail($id);
+        $this->authorize("restore", $classroom);
         $classroom->restore();
         redirect()->route("classrooms.index")->with("success", "Classroom ({$classroom->name}) restored");
     }
     public function forceDelete($id)
     {
         $classroom = Classroom::withTrashed()->findOrFail($id);
+        $this->authorize("forceDelete", $classroom);
         $classroom->forceDelete();
 
 
@@ -338,7 +347,7 @@ class ClassroomController extends Controller
                             Classroom::deleteCoverImage($classroom->cover_img_path);
                         }
 
-        } 
+        }
 
 
 

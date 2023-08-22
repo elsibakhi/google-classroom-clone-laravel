@@ -23,7 +23,7 @@ class UserClassroomScope implements Scope
 //         ->orWhereExists(function ($query){ // way 3
 // $query->select(DB::raw('1'))->from("classroom_user")
 // ->whereColumn("classroom_id","=","classrooms.id") // to compare two columns with each other not column and value
-// ->where("user_id","=",$id)        
+// ->where("user_id","=",$id)
 //     });
         }
     }

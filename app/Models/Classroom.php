@@ -32,7 +32,7 @@ public static string $disk = "public";
 
 
 
- // if i need if i send parameter in resouce route , i need laravel to find record by another column instead of id like 'code' 
+ // if i need if i send parameter in resouce route , i need laravel to find record by another column instead of id like 'code'
 // public function getRouteKeyName(){
 //     return 'code';
 // }
@@ -54,7 +54,7 @@ public static function deleteCoverImage($path){
 
 
 
-// this method to bootstap this model 
+// this method to bootstap this model
 // one of functiolty of it is define globle scope
 // i use booted instead boot becaues boot called before booted  so i grantee that the model is completed  // i can put this code in boot instead booted but we can faced some errors
 protected static function booted(){
@@ -84,17 +84,17 @@ static::observe(ClassroomObserver::class);
 // static::forceDeleted(function (Classroom $classroom){
 //     if($classroom->cover_img_path != null){
 //         self::deleteCoverImage($classroom->cover_img_path);
-          
-//       } 
-      
+
+//       }
+
 // });
 
 
-// deleting fire before deleting done 
+// deleting fire before deleting done
 // static::deleting(function (Classroom $classroom){
 // $classroom->status="deleted";
 // });
-// deleted fire after deleting done 
+// deleted fire after deleting done
 // static::deleted(function (Classroom $classroom){
 // $classroom->status="deleted";
 // $classroom->save();
@@ -108,7 +108,7 @@ static::observe(ClassroomObserver::class);
 
 
 
-// i can use this <<local>> scopes to modify or customize  the query by model //// like latest() 
+// i can use this <<local>> scopes to modify or customize  the query by model //// like latest()
 public static function scopeActive(Builder $query){
 
 
@@ -138,18 +138,18 @@ public function join($user_id,$role="student"){
     //     [
     //         "role"=>$role,
     //         "created_at"=> now()
-            
+
     //     ],
     //     $user_id2=>
     //     [
     //         "role"=>$role2,
     //         "created_at"=> now()
-            
+
     //     ],
-    
+
     // ]); // insert in pivot table
 // DB::table("classroom_user")->insert([
-//     "classroom_id"=> $this->id,  
+//     "classroom_id"=> $this->id,
 //     "user_id"=> $user_id,
 //     "role"=>$role,
 //     "created_at"=> now(),
@@ -158,11 +158,11 @@ public function join($user_id,$role="student"){
 
 
 // get(attributename)Attribute --> naming way
-// this method will use to modify any attribute returned from database 
+// this method will use to modify any attribute returned from database
 // classroom object contain attributes object that contain record values
 // this thing the name of it is ACCESSOR
 public function getNameAttribute($value){
-    return strtolower($value); // if i call $classroom->name the name value will converted to lowercase 
+    return strtolower($value); // if i call $classroom->name the name value will converted to lowercase
 }
 
 // IF I NEED TO RETURN DEFAULT IMAGE IF THERE IS NO IMAGE DEFINED
@@ -177,7 +177,7 @@ public function getNameAttribute($value){
 
 
 
-//becaues brevious way will throws error  ==> if $value is null laravel deal with it as undefied 
+//becaues brevious way will throws error  ==> if $value is null laravel deal with it as undefied
 //>> the solution is to define addintionl attribute that get imgpath value and deal with it
 // public function getCoverImgUrlAttribute(){
 //     if($this->cover_img_path){
@@ -190,7 +190,7 @@ public function getNameAttribute($value){
 
 
 
-// I CAN MAKE ACCESSOR TO ROUTE 
+// I CAN MAKE ACCESSOR TO ROUTE
 
 // public function getShowUrl(){
 //     return route("classrooms.show",$this->id);
@@ -211,7 +211,7 @@ public function getNameAttribute($value){
 
 
 
-// I CAN DEFINE ACCESSOR AND MUTATOR IN ONE WAY 
+// I CAN DEFINE ACCESSOR AND MUTATOR IN ONE WAY
 
 
 // name without set or get
@@ -269,7 +269,9 @@ public function students()
 
 
 
-
+public function scopeOwner(Builder $builder){
+        $builder->where("user_id", Auth::id());
+}
 
 
 }

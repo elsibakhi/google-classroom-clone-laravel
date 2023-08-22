@@ -21,18 +21,10 @@ use Illuminate\Support\Facades\Auth;
 */
 
 // dd(Auth::id());
-if (Auth::check()) {
-    Route::get('/', [ClassroomController::class,"index"])->name("home");
-}else{
-    Route::get('/', function(){return view('welcome');})->name("home");
-    
-}
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard',[ClassroomController::class,"index"])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -44,6 +36,7 @@ require __DIR__.'/auth.php';
 
 
 use App\Http\Controllers\JoinClassroomController;
+use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\TopicController;
 use App\Models\Comment;
 
@@ -90,6 +83,10 @@ Route::middleware('auth')->group(function () {
         Route::put("/{topic}","restore")->name("restore");
         Route::delete("forceDelete/{topic}","forceDelete")->name("force.delete");
     });
+
+  Route::post("/classwork/{classwork}/submission",[SubmissionController::class,"store"])->name("submissions.store");
+  Route::get("/classwork/submission/{submission}",[SubmissionController::class,"file"])->name("submissions.file");
+
 });
 
 
@@ -179,3 +176,20 @@ Route::resource('classrooms.classworks', ClassworkController::class); // way 1
 
 
 Route::resource("comments",CommentController::class);
+
+
+
+
+    Route::get('/', 
+    
+    
+
+       function () {
+         if(Auth::check()){
+            return redirect()->route("classrooms.index");
+
+         }
+        return view('welcome');
+    
+    }
+    )->name("home");
