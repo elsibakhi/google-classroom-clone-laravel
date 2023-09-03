@@ -29,6 +29,7 @@ Route::get('/dashboard',[ClassroomController::class,"index"])->middleware(['auth
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile', [ProfileController::class, 'extraUpdate'])->name('profile.update.extra');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
@@ -67,17 +68,17 @@ use App\Models\Comment;
 // });
 
 Route::middleware('auth')->group(function () {
-    
+
     Route::prefix("/classrooms/trashed")->as('classrooms.')->controller(ClassroomController::class)->group(function(){
         Route::get("/","trashed")->name("trashed");
         Route::put("/{classroom}","restore")->name("restore");
         Route::delete("/forceDelete/{classroom}","forceDelete")->name("force.delete");
-        
-        
-        
+
+
+
     });
-    
-    
+
+
     Route::prefix("/classrooms/{classroom}/topics/trashed")->as('topics.')->controller(TopicController::class)->group(function(){
         Route::get("/","trashed")->name("trashed");
         Route::put("/{topic}","restore")->name("restore");
@@ -100,7 +101,7 @@ Route::post("classrooms/{classroom}/join",[JoinClassroomController::class,"store
 Route::resource("/classrooms",ClassroomController::class);
 
 // Route::get("/classroom/{classroom}/people",ClassroomPeopleController::class)->name("classrooms.people"); // because i used __invoke magic method i used just ClassroomPeopleController::class
-Route::delete("/classroom/{classroom}/people/delete",[ClassroomPeopleController::class,"destroy"])->name("classrooms.people.destroy"); 
+Route::delete("/classroom/{classroom}/people/delete",[ClassroomPeopleController::class,"destroy"])->name("classrooms.people.destroy");
 // Route::get("/classrooms",[ClassroomController::class,"index"])->name("classrooms.index");
 // Route::get("/classrooms/create",[ClassroomController::class,"create"])->name("classrooms.create");
 // Route::post("/classrooms/store",[ClassroomController::class,"store"])->name("classrooms.store");
@@ -108,11 +109,11 @@ Route::delete("/classroom/{classroom}/people/delete",[ClassroomPeopleController:
 // Route::put("/classrooms/update/{id}",[ClassroomController::class,"update"])->name("classrooms.update");
 // Route::delete("/classrooms/delete/{id}",[ClassroomController::class,"destroy"])->name("classrooms.destroy");
 // Route::get("/classrooms/{classroom}",[ClassroomController::class,"show"])->name("classrooms.show") // the routes that have optinal parameter , we should put it in the last
-// ->where("classroom","[0-9]+"); // if i need  intger parameter 
+// ->where("classroom","[0-9]+"); // if i need  intger parameter
 
 // if there multi parameter
 // ->where(["classroom"=>"[0-9]+" ,
-//          "edit"=>"[0-9]+"    ]) 
+//          "edit"=>"[0-9]+"    ])
 
 
 
@@ -133,7 +134,7 @@ Route::get("/classrooms/{classroom}/{topic}/edit",[TopicController::class,"edit"
 Route::put("/classrooms/{classroom}/topics/{topic}",[TopicController::class,"update"])->name("topics.update");
 Route::delete("/classrooms/{classroom}/topics/{topic}",[TopicController::class,"destroy"])->name("topics.destroy");
 Route::get("/classrooms/{classroom}/topics/{topic}",[TopicController::class,"show"])->name("topics.show") // the routes that have optinal parameter , we should put it in the last
-->where("topic","[0-9]+"); 
+->where("topic","[0-9]+");
 
 
 
@@ -180,9 +181,9 @@ Route::resource("comments",CommentController::class);
 
 
 
-    Route::get('/', 
-    
-    
+    Route::get('/',
+
+
 
        function () {
          if(Auth::check()){
@@ -190,6 +191,6 @@ Route::resource("comments",CommentController::class);
 
          }
         return view('welcome');
-    
+
     }
     )->name("home");

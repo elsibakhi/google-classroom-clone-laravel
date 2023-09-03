@@ -1,22 +1,25 @@
-<x-header title={{$title}}>
+<x-header title={{ $title }}>
 
 
-{{$styles??null}}
-   
+    {{ $styles ?? null }}
+
 
 </x-header>
 
 
+<div id="alertEvent" style="position:fixed; top:10px; z-index: 10 " class="alert alert-primary  fade " role="alert">
+
+
+</div>
 
 <main>
-
-{{$slot}}
+    {{ $slot }}
 </main>
 
 
-<x-footer> 
-   
-    {{$scripts??null}}
+<x-footer>
 
-    
+    {{ $scripts ?? null }}
+
+
 </x-footer>

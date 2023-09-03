@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\Classwork\Create as CreateClasswork;
+use App\Listeners\AddPostToStream;
+use App\Listeners\ClassworkNotificationPublisher;
 use App\Models\Classroom;
 use App\Observers\ClassroomObserver;
 use Illuminate\Auth\Events\Registered;
@@ -20,6 +23,10 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        CreateClasswork::class => [
+          AddPostToStream::class,
+          ClassworkNotificationPublisher::class
+        ]
     ];
 
  // another way to bind the model with observer

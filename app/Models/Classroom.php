@@ -26,6 +26,15 @@ public static string $disk = "public";
     ]; // whightlist
 
 
+    protected $appends = [
+        "cover_img_url"
+    ];
+    protected $hidden = [
+        "cover_img_path",
+        "deleted_at",
+        "code"
+    ];
+
  // if i need to prvent to add some column  -- not recommnded
  // protected $guarded =["id"]; // blacklist
 
@@ -166,14 +175,14 @@ public function getNameAttribute($value){
 }
 
 // IF I NEED TO RETURN DEFAULT IMAGE IF THERE IS NO IMAGE DEFINED
-// public function getCoverImgPathAttribute($value){
-//     if($value){
-//         return Storage::url("$value");
+public function getCoverImgUrlAttribute($value){
+    if($value){
+        return Storage::url("$value");
 
-//     }else{
-//         return asset('default.png');
-//     }
-// }
+    }else{
+        return asset('default.png');
+    }
+}
 
 
 
@@ -237,9 +246,18 @@ public function classworks():HasMany{
 
 }
 
+public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class);
+}
 public function topics(): HasMany
 {
     return $this->hasMany(Topic::class);
+}
+
+public function streams(): HasMany
+{
+    return $this->hasMany(Stream::class)->latest();
 }
 public function users(): BelongsToMany
 {

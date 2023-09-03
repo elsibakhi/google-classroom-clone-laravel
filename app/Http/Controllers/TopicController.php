@@ -47,7 +47,7 @@ $validated["classroom_id"]=$classroom_id;
     Topic::create($validated);
 
 
-    return  redirect()->back()->with("success","The opreation done");
+    return  redirect()->back()->with("success",__('The opreation done'));
 
     }
 
@@ -85,7 +85,7 @@ $validated["classroom_id"]=$classroom_id;
 
 
 
-        return  redirect()->back()->with("success","The opreation done");
+        return  redirect()->back()->with("success",__('The opreation done'));
 
     }
 
@@ -99,7 +99,7 @@ $validated["classroom_id"]=$classroom_id;
         Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
         Topic::destroy($topic_id);
 
-        return  redirect()->back()->with("success","The opreation done");
+        return  redirect()->back()->with("success",__('The opreation done'));
 
     }
     public function trashed($classroom_id)
@@ -116,7 +116,7 @@ $validated["classroom_id"]=$classroom_id;
         $topic=Topic::onlyTrashed()->findOrfail($topic_id);
 $topic->restore();
 
-       return back()->with("success","The opreation done");
+       return back()->with("success",__('The opreation done'));
     }
 
 
@@ -124,7 +124,7 @@ public function forceDelete($classroom_id,$topic_id){
         Gate::authorize("teacher", [Classroom::findOrFail($classroom_id)]);
     Topic::withTrashed()->findOrFail($topic_id)->forceDelete();
 
-    return back()->with("success","The opreation done");
+    return back()->with("success",__('The opreation done'));
 
 }
 

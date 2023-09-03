@@ -192,12 +192,24 @@ class ClassroomController extends Controller
         //  alter way to get classroom -->  Classroom:where("id","=",$id)->first();
 
         $this->authorize("view", $classroom);
+        $classroom->load("streams");
         $invitation_link = URL::signedRoute("classrooms.join.create", [ // signedRoute protect the route with singnture // but you should to add signed middleware in route defenation
             "classroom" => $classroom->id,
             "code" => $classroom->code // this will showed as query string
         ]);
 
-        $classworks=$classroom->classworks->load("topic")->groupBy("topic_id");
+        $classworks = $classroom->classworks()
+            ->with("topic")
+            ->withCount(["users",
+            "users as turnedIn_count" =>function ($query) {
+                $query->where("classwork_user.status", "=", "submitted");
+        },
+            "users as stillassigned_count" =>function ($query) {
+                $query->where("classwork_user.status", "=", "assigned");
+        },
+
+        ])
+        ->get()->groupBy("topic_id");
         // dd($classworks);
         return view("classrooms.show",compact(
             "classroom","classworks", "invitation_link"
@@ -278,7 +290,7 @@ class ClassroomController extends Controller
         // 3- $classroom->fill($request->all());
 
 
-        return  redirect()->route("classrooms.index")->with("success", "The opreation done");
+        return  redirect()->route("classrooms.index")->with("success", __('The opreation done'));
     }
 
 
@@ -305,7 +317,7 @@ class ClassroomController extends Controller
         // example ==> session()->flash('success',"The class room has been deleted successfully!");
         // if i need to send messages with redirect , i will use with()
         // flash message is message stored in session to the next request (مش دائمة بتنحذف لما تعمل ريكوست تاني)
-        return  redirect()->route("classrooms.index")->with("success", "The opreation done");
+        return  redirect()->route("classrooms.index")->with("success", __('The opreation done'));
 
         // i will access this message in view by use $success var or call session("success") or session()->get("success") or Session::get("success")
         // Session::put(key,value) ==> put message in session بشكل دائم
@@ -331,7 +343,7 @@ class ClassroomController extends Controller
         $classroom = Classroom::onlyTrashed()->findOrFail($id);
         $this->authorize("restore", $classroom);
         $classroom->restore();
-        redirect()->route("classrooms.index")->with("success", "Classroom ({$classroom->name}) restored");
+       return redirect()->route("classrooms.index")->with("success", __('The opreation done'));
     }
     public function forceDelete($id)
     {
@@ -352,6 +364,6 @@ class ClassroomController extends Controller
 
 
 
-      return  back()->with("success", "Classroom ({$classroom->name}) deleted forever");
+      return  back()->with("success", __('The opreation done'));
     }
 }

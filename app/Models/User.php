@@ -6,8 +6,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Notifications\Notification;
 use Laravel\Sanctum\HasApiTokens;
 
 // << implements MustVerifyEmail >> to enable email verification
@@ -59,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail
         "id")  // PK for related model
         ->withPivot(["role","submitted_at","created_at"])
         ->as('join') // to get pivot elements by using join instead of pivot
-    
+
        ;
     }
     public function teachers()
@@ -73,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
         ->wherePivot("role","=","student");
     }
 
-    // there is two relations  with classroom 
+    // there is two relations  with classroom
 
 // one to many with classroom
     public function createdClassrooms (){
@@ -93,6 +95,21 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function comments() : HasMany {
         return $this->hasMany(Comment::class)/*->latest()*/; // if i need to modify query on the relation (latest)
+    }
+
+
+    public function profile():HasOne {
+      return  $this->hasOne(Profile::class)->withDefault();
+    }
+
+public function routeNotificationForHadara(){
+        // return $user->profile->phone;
+        return "970599177600";
+}
+
+  public function routeNotificationForVonage(Notification $notification): string
+    {
+        return '972567302408';
     }
 
 }

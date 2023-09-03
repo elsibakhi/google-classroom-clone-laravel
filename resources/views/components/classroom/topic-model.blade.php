@@ -5,14 +5,14 @@
                 <form action={{ route('topics.store', $classroom->id) }} method="post">
                     @csrf
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add topic</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ __('Add topic') }}</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="form-floating mb-3">
                             <input type="text" @class(['form-control', 'is-invalid' => $errors->has('name')]) id="floatingInput" name="name"
                                 placeholder="Mangement" value={{ old('name') }}>
-                            <label for="floatingInput">Topic</label>
+                            <label for="floatingInput">{{ __('Topic') }}</label>
                             @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -21,8 +21,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Add') }}</button>
                     </div>
 
                 </form>

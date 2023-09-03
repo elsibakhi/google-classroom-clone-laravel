@@ -60,7 +60,7 @@ public function store(Request $request,Classwork $classwork){
 
 
 
-   return Back()->with("success","Adding submissions done ");
+   return Back()->with("success",__('The opreation done'));
 }
 
 

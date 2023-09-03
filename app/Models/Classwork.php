@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\ClassworkType;
 use App\Models\Scopes\UserClassworkScope;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,18 +50,23 @@ static::addGlobalScope(new UserClassworkScope());
           if(!$classwork->published_at){
   $classwork->published_at= now();
           }
- } ) ;    
+ } ) ;
 }
 
 
 
 
 // many to many with classroom
+public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class);
+}
+
 public function users(): BelongsToMany
 {
     return $this->belongsToMany(
         User::class, //related model
-    "classwork_user")  
+    "classwork_user")
     ->withPivot(["grade","submitted_at","status","created_at"])
 ->using(ClassworkUser::class) // the model of pivot table
 
@@ -85,6 +91,28 @@ if($this->published_at){
 public function submissions () : HasMany{
     return $this->hasMany(Submission::class);
 }
+
+
+public function getClassworkTypeAttribute(){
+        return ucfirst($this->type->value);
+}
+
+
+ protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn( $value) => $value,
+            set: function ( $value) {
+
+             $value=   preg_replace('/<script.*?<\/script>|<\?.*?\?>/', '', $value);
+
+
+
+                return $value;
+            }
+        );
+    }
+
 
 
 }

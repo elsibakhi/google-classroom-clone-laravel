@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-
+use Nnjeim\World\World;
 class ProfileController extends Controller
 {
     /**
@@ -16,8 +16,16 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        // dd(Request::create("https://localhost/api/countries")->data);
+$action = World::timezones();
+
+if ($action->success) {
+    $timezones = $action->data;
+}
+
         return view('profile.edit', [
             'user' => $request->user(),
+            'timezones' => $timezones,
         ]);
     }
 
@@ -35,6 +43,28 @@ class ProfileController extends Controller
         $request->user()->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    }
+
+
+    public function extraUpdate(Request $request): RedirectResponse
+    {
+
+        $validated = $request->validate([
+           "first_name"=>["required","string","max:50"],
+           "last_name"=>["required","string","max:50"],
+           "gender"=>["nullable","in:male,female"],
+           "birthday"=>["nullable","date"],
+           "locale"=>["required","in:ar,en"],
+           "timezone"=>["required","timezone:all"],
+
+        ]);
+
+      $request->user()->profile()->update($validated);
+
+
+
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated-extra');
     }
 
     /**

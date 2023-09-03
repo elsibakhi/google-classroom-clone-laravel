@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,19 @@ public function commentable() :MorphTo {
 }
 
 
+ protected function content(): Attribute
+    {
+        return Attribute::make(
+            get: fn( $value) => $value,
+            set: function ( $value) {
 
+             $value=   preg_replace('/<script.*?<\/script>|<\?.*?\?>/', '', $value);
+
+
+
+                return $value;
+            }
+        );
+    }
 
 }

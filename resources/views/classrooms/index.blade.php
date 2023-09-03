@@ -5,7 +5,7 @@
 
     <div class="container my-5">
 
-        <h1>Classrooms</h1>
+        <h1>{{ __('Classrooms') }}</h1>
         <hr>
 
     <x-alert name="success" id="alert1" class="alert-success"/>
@@ -27,12 +27,12 @@
             </div>
 
 
-            <a href={{route("classrooms.create")}} type="button" class="btn btn-primary">Create a classroom</a>
+            <a href={{route("classrooms.create")}} type="button" class="btn btn-primary">{{ __('Create a classroom') }}</a>
             {{-- <a href={{route("topics.index",$classroom)}} type="button" class="btn btn-dark">Show all topics</a> --}}
-             
 
 
-                <a href={{route("classrooms.trashed")}} type="button" class="btn btn-warning">Trashed Classrooms</a>
+
+                <a href={{route("classrooms.trashed")}} type="button" class="btn btn-warning">{{ __('Trashed Classrooms') }}</a>
 
 
 

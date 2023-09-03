@@ -1,17 +1,17 @@
 
-    
+
     <h1 class="text-success">{{$classwork->title}}</h1>
-<div class="text-secondary">{{$classwork->user}} - {{$classwork->created_at->diffForHumans()}} 
+<div class="text-secondary">{{$classwork->user->name}} - {{$classwork->created_at->diffForHumans()}}
 @if ($classwork->updated_at != null)
 
-(Edited {{$classwork->updated_at->diffForHumans()}} )
-@endif    
+({{ __('Edited') }} {{$classwork->updated_at->diffForHumans()}} )
+@endif
 
 </div>
 
 <hr>
 
-<div>{{$classwork->description}}</div>
+<div>{!! $classwork->description !!}</div>
 
 
 <div>
@@ -22,13 +22,14 @@
   @csrf
         <input type="hidden" name="id" value="{{$classwork->id}}" />
         <input type="hidden" name="type" value="Classwork" />
+        <label for="floatingTextarea2" > <b> {{ __('Leave a comment here') }}:</b> </label>
         <div class="form-floating">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="comment" ></textarea>
-            <label for="floatingTextarea2">Comments</label>
+            <textarea class="form-control" placeholder="{{ __('Leave a comment here') }}" id="floatingTextarea2" style="height: 100px" name="comment" ></textarea>
+            <label for="floatingTextarea2">{{ __('Comments') }}</label>
           </div>
 
         <div class="col-12">
-          <button type="submit" class="btn btn-primary">Comment</button>
+          <button type="submit" class="btn btn-primary">{{ __('Comment') }}</button>
         </div>
       </form>
 

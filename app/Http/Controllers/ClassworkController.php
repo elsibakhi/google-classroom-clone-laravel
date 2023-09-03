@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ClassworkType;
+use App\Events\Classwork\Create;
 use App\Models\Classroom;
 use App\Models\Classwork;
 use App\Models\Scopes\UserClassworkScope;
@@ -111,13 +112,15 @@ $request->merge([
 
                      $classwork->users()->attach($request->students);
 
+            event(new Create($classwork));
+
     } );
 
 // }catch(QueryException  $ex){
 //             return "eroorrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
 // }
     return back()
-    ->with("success","Classwork created");
+    ->with("success",__('The opreation done'));
 
             }
 
@@ -170,7 +173,7 @@ $classroom_user=DB::table("classroom_user")->where("user_id","=",Auth::id())->wh
 
 
     return back()
-    ->with("success","Classwork updated");
+    ->with("success",__('The opreation done'));
 
 
     }
@@ -184,6 +187,6 @@ $classroom_user=DB::table("classroom_user")->where("user_id","=",Auth::id())->wh
         $classwork->delete();
 
         return redirect()->route("classrooms.show",[$classroom])
-        ->with("success","Classwork deleted");
+        ->with("success",__('The opreation done'));
     }
 }

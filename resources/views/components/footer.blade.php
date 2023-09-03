@@ -6,20 +6,20 @@
       <!-- Left -->
 
       <!-- Left -->
-  
+
 
       <!-- Right -->
     </section>
     <!-- Section: Social media -->
-  
 
-  
+
+
     <!-- Copyright -->
     <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
-      © 2023 Copyright: {{config("app.name")}}
+      © {{ __('2023') }} {{ __('Copyright') }} : {{config("app.name")}}
     </div>
     <!-- Copyright -->
-  </footer>
+  </footer> 
   <!-- Footer -->
   <script src="https://kit.fontawesome.com/442c7b7464.js" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
