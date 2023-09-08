@@ -20,6 +20,7 @@ class ClassroomController extends Controller
     public function __construct()
     {
         $this->middleware("auth");
+        $this->middleware("subscriped")->only(["create","store"]);// i can replace it with policy
     }
 
     public function index()
@@ -49,7 +50,7 @@ class ClassroomController extends Controller
 
     public function create()
     {
-
+        $this->authorize("create", [Classroom::class]);
         return view("classrooms.create", ["classroom" => new Classroom()]); // i use ["classroom"=>new Classroom()] because i use classroom variable in << classroom_form.blade.php >>
     }  // i send empty classroom object
     public function store(ClassroomRequest $request): RedirectResponse

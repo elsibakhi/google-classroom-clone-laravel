@@ -181,6 +181,10 @@ return [
     |
     */
 
+     "api_key"=> env("API_KEY") ,
+
+
+
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),

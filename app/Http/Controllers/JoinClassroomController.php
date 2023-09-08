@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use Exception ;
+use Illuminate\Support\Facades\Gate;
 
 class JoinClassroomController extends Controller
 {
@@ -34,10 +35,11 @@ return view("classrooms.join",compact("classroom"));
 
 public function store(Request $request,$id){
     $classroom=Classroom::withoutGlobalScopes()->active()->findOrfail($id);
+    Gate::authorize('classroom.join',["classroom"=>$classroom]);
 $request->validate(["role"=>"in:student,teacher"]);
     try{
         $this->exists($id,Auth::id());
-    
+
     }catch(Exception $e){
         return redirect()->route("classrooms.show",$id);
     }
@@ -48,7 +50,7 @@ $request->validate(["role"=>"in:student,teacher"]);
 return redirect()->route("classrooms.show",$id);
 }
 protected function exists($classroom_id,$user_id){
-  
+
     // $exists=DB::table('classroom_user') // i use DB because i dont need to create model to this table
     // ->where("classroom_id",$classroom_id)
     // ->where("user_id",$user_id)

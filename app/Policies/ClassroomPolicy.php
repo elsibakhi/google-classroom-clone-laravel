@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Classroom;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class ClassroomPolicy
 {
@@ -27,9 +28,25 @@ class ClassroomPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user)
     {
-        //
+          $user = Auth::user();
+
+                $allowed_classrooms_number=$user
+                ->subscriptions()
+                ->where("expires_at", ">=", now())
+                ->first()
+                ->plan->features()->where("name","Classroom #")->first()->pivot->feature_value;
+
+
+
+ if($user->ownedClassrooms()->count()==$allowed_classrooms_number){
+                 return Response::deny('You have used the full number of classrooms allowed.');
+            }
+
+            return Response::allow();
+
+
     }
 
     /**
@@ -37,7 +54,7 @@ class ClassroomPolicy
      */
     public function update(User $user, Classroom $classroom): bool
     {
-      
+
         return $classroom->where("user_id", $user->id)->exists();
     }
 

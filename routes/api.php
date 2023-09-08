@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AccessTokensController;
 use App\Http\Controllers\Api\v1\ClassroomController;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +17,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+
+
+    Route::apiResource("classrooms", ClassroomController::class);
+    Route::get("/auth/tokens", [AccessTokensController::class,"index"]);
+    Route::delete("/auth/tokens/{id?}", [AccessTokensController::class,"destroy"]);
+
 });
 
+Route::middleware('guest:sanctum')->group(function () {
 
 
-Route::apiResource("classrooms", ClassroomController::class);
+
+
+    Route::post("/auth/tokens", [AccessTokensController::class,"store"]);
+
+
+
+});
+

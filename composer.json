@@ -13,6 +13,7 @@
         "laravel/vonage-notification-channel": "^3.2",
         "nnjeim/world": "^1.1",
         "pusher/pusher-php-server": "^7.2",
+        "stripe/stripe-php": "^12.1",
         "symfony/process": "^6.3"
     },
     "require-dev": {

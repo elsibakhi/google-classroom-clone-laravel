@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -7,6 +8,8 @@ use App\Http\Controllers\ClassroomController;
 use App\Http\Controllers\ClassroomPeopleController;
 use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -25,8 +28,14 @@ use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/dashboard',[ClassroomController::class,"index"])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/plans',[PlanController::class,"index"])->name('plans.index');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/plans/change',[PlanController::class,"change"])->name('plans.change');
+    Route::post("subscriptions", [SubscriptionController::class, "store"])->name("subscriptions.store");
+    Route::get("subscriptions/{subscription}/pay", [PaymentController::class, "create"])->name("payments.create");
+    Route::post("pay", [PaymentController::class, "pay"])->name("payments.pay");
+    Route::get("payment/success", [PaymentController::class, "success"])->name("payments.success");
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile', [ProfileController::class, 'extraUpdate'])->name('profile.update.extra');

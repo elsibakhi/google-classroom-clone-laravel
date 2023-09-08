@@ -7,7 +7,7 @@
 
         <h1>{{ __('Classrooms') }}</h1>
         <hr>
-
+        <ul id="apiClassrooms"></ul>
     <x-alert name="success" id="alert1" class="alert-success"/>
     <x-alert name="error"  id="alert1" class="alert-danger" />
             <div class="row my-5">
@@ -42,7 +42,25 @@
 
 
 
+<x-slot:scripts>
+    <script>
 
+        const xhttp = new XMLHttpRequest();
+          xhttp.onload = function() {
+            let classrooms=JSON.parse(this.responseText);
+                let list = "";
+          classrooms["data"].forEach(function (classroom){
+
+
+                  list+= `<li> ${classroom["name"]}</li>`;
+            });
+               document.getElementById("apiClassrooms").innerHTML =list;
+            }
+          xhttp.open("GET", "api/v1/classrooms");
+          xhttp.send();
+
+          </script>
+          </x-slot:scripts>
 </x-main-layout>
 
 

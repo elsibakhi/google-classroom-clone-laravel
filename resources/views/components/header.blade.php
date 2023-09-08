@@ -47,6 +47,15 @@
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="{{ route('profile.edit') }}">{{ __('Profile') }}</a></li>
+
+              @cannot("subscription.confirmed")
+
+           
+                  <li><a class="dropdown-item" href="{{ route('plans.index') }}">{{ __('Subscribe now') }}</a></li>
+
+             @endcannot
+
+
                 <li><hr class="dropdown-divider"></li>
                 <li>      <form method="POST" action="{{ route('logout') }}">
                           @csrf

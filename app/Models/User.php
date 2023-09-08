@@ -93,6 +93,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
+
+
+    public function validSubscription() : HasOne{
+        return $this->HasOne(Subscription::class)->where("expires_at", ">=", now());
+    }
+    public function subscriptions() : HasMany {
+        return $this->hasMany(Subscription::class);
+    }
+    public function ownedClassrooms() : HasMany {
+        return $this->hasMany(Classroom::class);
+    }
     public function comments() : HasMany {
         return $this->hasMany(Comment::class)/*->latest()*/; // if i need to modify query on the relation (latest)
     }
