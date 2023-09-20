@@ -18,7 +18,7 @@ class EnsureThatUserHasActiveSubscription
         $user = $request->user();
         $exists = $user->subscriptions()
         ->where("expires_at", ">=", now())
-        ->where("status","confirmed")
+        ->where("status","active")
         ->exists();
 
 

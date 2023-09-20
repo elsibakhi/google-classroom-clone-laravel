@@ -42,12 +42,12 @@ class AuthServiceProvider extends ServiceProvider
                 $allowed_users_number=$user
                 ->subscriptions()
                 ->where("expires_at", ">=", now())
-                 ->where("status","confirmed")
+                 ->where("status","active")
                 ->first()
                 ->plan->features()->where("name","Students Per Classroom")->first()->pivot->feature_value;
 
             // dd($classroom->users()->count(), $allowed_users_number);
-             if($classroom->users()->count()==$allowed_users_number){
+             if($classroom->users()->count()>=$allowed_users_number){
                  return Response::deny('This classroom is currently full.');
             }
 
@@ -67,7 +67,7 @@ class AuthServiceProvider extends ServiceProvider
 
    return   $user->subscriptions()
         ->where("expires_at", ">=", now())
-        ->where("status","confirmed")
+        ->where("status","active")
         ->exists();
 
 

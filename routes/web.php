@@ -10,6 +10,7 @@ use App\Http\Controllers\ClassworkController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\webhooks\StripeController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -26,28 +27,31 @@ use Illuminate\Support\Facades\Auth;
 // dd(Auth::id());
 
 
-
+Route::post("payments/stripe/webhook",StripeController::class);
 Route::get('/dashboard',[ClassroomController::class,"index"])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/plans',[PlanController::class,"index"])->name('plans.index');
 
 Route::middleware('auth')->group(function () {
+    Route::get("/",[ClassroomController::class,"index"]);
     Route::get('/plans/change',[PlanController::class,"change"])->name('plans.change');
     Route::post("subscriptions", [SubscriptionController::class, "store"])->name("subscriptions.store");
     Route::get("subscriptions/{subscription}/pay", [PaymentController::class, "create"])->name("payments.create");
-    Route::post("pay", [PaymentController::class, "pay"])->name("payments.pay");
+    Route::get("pay/{subscription}", [PaymentController::class, "pay"])->name("payments.pay");
     Route::get("payment/success", [PaymentController::class, "success"])->name("payments.success");
+    Route::get("payment/cancel", [PaymentController::class, "cancel"])->name("payments.cancel");
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile', [ProfileController::class, 'extraUpdate'])->name('profile.update.extra');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// require __DIR__.'/auth.php'; // now i use fortify for authentcation
 
 
 use App\Http\Controllers\JoinClassroomController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\TopicController;
+use App\Http\Controllers\TwoFactorAuthenticationController;
 use App\Models\Comment;
 
 /*
@@ -77,6 +81,9 @@ use App\Models\Comment;
 // });
 
 Route::middleware('auth')->group(function () {
+
+    Route::get("auth/2fa",TwoFactorAuthenticationController::class)->name("2fa.show");
+
 
     Route::prefix("/classrooms/trashed")->as('classrooms.')->controller(ClassroomController::class)->group(function(){
         Route::get("/","trashed")->name("trashed");
@@ -108,6 +115,7 @@ Route::post("classrooms/{classroom}/join",[JoinClassroomController::class,"store
 
 
 Route::resource("/classrooms",ClassroomController::class);
+
 
 // Route::get("/classroom/{classroom}/people",ClassroomPeopleController::class)->name("classrooms.people"); // because i used __invoke magic method i used just ClassroomPeopleController::class
 Route::delete("/classroom/{classroom}/people/delete",[ClassroomPeopleController::class,"destroy"])->name("classrooms.people.destroy");
@@ -190,16 +198,4 @@ Route::resource("comments",CommentController::class);
 
 
 
-    Route::get('/',
 
-
-
-       function () {
-         if(Auth::check()){
-            return redirect()->route("classrooms.index");
-
-         }
-        return view('welcome');
-
-    }
-    )->name("home");

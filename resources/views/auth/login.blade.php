@@ -1,15 +1,22 @@
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
+@php
+    $username=config("fortify.username");
+    if ($username=="email") {
+       $type='email';
+    }else{
+        $type="text";
+    }
+@endphp
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
         <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="{{ $username }}" :value="__('Email/Username')" />
+            <x-text-input id="{{$username}}" class="block mt-1 w-full" type="{{ $type }}" name="{{ $username }}" :value="old($username)" required autofocus autocomplete="{{ $username }}" />
+            <x-input-error :messages="$errors->get($username)" class="mt-2" />
         </div>
 
         <!-- Password -->

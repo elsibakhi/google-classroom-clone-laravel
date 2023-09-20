@@ -14,24 +14,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // 
+        //
 
-DB::table('users')->insert([ "name" => "baraa",
-"email" =>"baraa@gmail.com",
-"email_verified_at" =>null,
-"password" =>Hash::make("test1234")]);
-
-
-DB::table('users')->insert([ "name" => "ahmed",
-"email" =>"ahmed@gmail.com",
-"email_verified_at" =>null,
-"password" =>Hash::make("test1234")]);
-
-
-
-DB::table('users')->insert([ "name" => "hazem",
-"email" =>"hazem@gmail.com",
-"email_verified_at" =>null,
-"password" =>Hash::make("test1234")]);
+        \App\Models\User::factory(40)->create();
     }
 }

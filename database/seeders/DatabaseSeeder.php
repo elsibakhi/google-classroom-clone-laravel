@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        \App\Models\Admin::factory(4)->create();
 
         // $this->call([
         //     ClassroomSeeder::class
@@ -23,9 +24,9 @@ class DatabaseSeeder extends Seeder
 
 
 
-        \App\Models\Topic::factory(3)->create([
-            'classroom_id' => 2,
-        ]);
+        // \App\Models\Topic::factory(3)->create([
+        //     'classroom_id' => 2,
+        // ]);
 
 
 

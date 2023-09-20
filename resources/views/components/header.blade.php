@@ -50,12 +50,12 @@
 
               @cannot("subscription.confirmed")
 
-           
+
                   <li><a class="dropdown-item" href="{{ route('plans.index') }}">{{ __('Subscribe now') }}</a></li>
 
              @endcannot
 
-
+                <li><a class="dropdown-item" href="{{ route('2fa.show') }}">{{ __('Two factor auth') }}</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>      <form method="POST" action="{{ route('logout') }}">
                           @csrf

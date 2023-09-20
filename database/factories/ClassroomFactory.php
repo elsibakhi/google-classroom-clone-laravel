@@ -17,7 +17,39 @@ class ClassroomFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->name(),
+            'subject' => fake()->text(10),
+            'room' => fake()->text(10),
+            'section' => fake()->text(10),
+            'code' => fake()->unique()->text(8),
+
+            'status' => "active",
+            'user_id' => 7,
+            'created_at' => now(),
+            'updated_at' => now(),
+
+
         ];
     }
+
+
+
+//     public function userID($id): Factory
+// {
+//     return $this->state(function (array $attributes) use ($id) {
+//         return [
+//             'user_id' => $id,
+//         ];
+//     });
+// }
+
+
+public function defaultImage(): Factory
+{
+    return $this->state(function (array $attributes)  {
+        return [
+              'cover_img_path' => "/covers/1.jpg",
+        ];
+    });
+}
 }

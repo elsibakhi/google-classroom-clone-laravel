@@ -36,7 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\setUserSettings::class,
+
             \App\Http\Middleware\markNotificationAsRead::class,
         ],
 
@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'subscriped' => \App\Http\Middleware\EnsureThatUserHasActiveSubscription::class,
+        'user.setting' => \App\Http\Middleware\setUserSettings::class,
     ];
 }

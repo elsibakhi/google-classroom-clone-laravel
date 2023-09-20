@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +14,10 @@ class ClassroomSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('classrooms')->insert([ "name" => "test",
-        "code" =>"bghj66",
-        "user_id" =>1,
-        "status" =>"active"]);
-            }
-    
+        $user = User::find(7);
+              \App\Models\Classroom::factory(9)->defaultImage()->create();
+
+
+    }
+
 }

@@ -30,7 +30,7 @@ class ClassroomPolicy
      */
     public function create(User $user)
     {
-          $user = Auth::user();
+
 
                 $allowed_classrooms_number=$user
                 ->subscriptions()
@@ -40,7 +40,7 @@ class ClassroomPolicy
 
 
 
- if($user->ownedClassrooms()->count()==$allowed_classrooms_number){
+ if($user->ownedClassrooms()->count()>=$allowed_classrooms_number){
                  return Response::deny('You have used the full number of classrooms allowed.');
             }
 
@@ -69,9 +69,22 @@ class ClassroomPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Classroom $classroom): bool
+    public function restore(User $user, Classroom $classroom)
     {
-        return $classroom->where("user_id", $user->id)->exists();
+
+                $allowed_classrooms_number=$user
+                ->subscriptions()
+                ->where("expires_at", ">=", now())
+                ->first()
+                ->plan->features()->where("name","Classroom #")->first()->pivot->feature_value;
+
+
+
+ if($user->ownedClassrooms()->count()>=$allowed_classrooms_number){
+                 return Response::deny('You have used the full number of classrooms allowed.');
+            }
+
+            return Response::allow();
     }
 
     /**
